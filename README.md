@@ -58,18 +58,18 @@ The package supports such formats as "ts", "xts" and "zoo". By default type is e
 
     data = knoema.get("IMFWEO2017Apr",list (country='914;512;111', subject='lp;ngdp'), type = "zoo") 
     
-To take into account the parameters app_id and app_secret in a function, you must explicitly specify them:
+To take into account the parameters app_id and app_secret in a function, you must explicitly specify them::
 
     data = knoema.get('MEI_BTS_COS_2015', list(location='AT;AU', subject='BSCI', measure='blsa', frequency='Q;M'), type="xts", app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
 
 Note: If the function returns an error 403(Forbidden), try using other parameters app_id and app_secret.
 
-# Convrting timeseries in different formats
+# Converting timeseries in different formats
 
-  Function knoema.get always return list of timeseries. If you want to convert series in format ts,xts, zoo, you should first get the separate serie:
+  Function knoema.get always return list of timeseries. If you want to convert series in format ts,xts, zoo, you should first get the separate serie::
   
-   data = knoema.get('IMFWEO2017Apr', list(country='albania;afghanistan;united states', subject='Gross domestic product, current prices (National currency);population (persons)'), "ts") 
-   sname = 'A - United States - Gross domestic product, current prices (National currency)'
-   time_ser = data[[sname]]
-   zoo = as.zoo(time_ser)
+    data = knoema.get('IMFWEO2017Apr', list(country='albania;afghanistan;united states', subject='Gross domestic product, current     prices (National currency);population (persons)'), "ts") 
+    sname = 'A - United States - Gross domestic product, current prices (National currency)'
+    time_ser = data[[sname]]
+    zoo = as.zoo(time_ser)
 
