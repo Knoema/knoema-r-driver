@@ -72,4 +72,4 @@ Note: If the function returns an error 403(Forbidden), try using other parameter
    sname = 'A - United States - Gross domestic product, current prices (National currency)'
    time_ser = data[[sname]]
    zoo = as.zoo(time_ser)
-  
+

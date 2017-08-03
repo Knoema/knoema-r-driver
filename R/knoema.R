@@ -1,4 +1,4 @@
-#' knoematest package!
+#' knoema package!
 #' This package works with datasets from knoema.com
 #' @param datasetId is Dataset's ID specified as a string
 #' @param selection is list where all the dimensions of the dataset are listed and a selection from them
