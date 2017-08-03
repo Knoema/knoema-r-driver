@@ -1,4 +1,4 @@
 library(testthat)
-library(knoematest)
+library(knoema)
 
-test_check("knoematest")
+test_check("knoema")

@@ -1,4 +1,4 @@
-Package: knoematest
+Package: knoema
 Type: Package
 Title: The package can be used for obtaining data from the datasets from the site knoema.com
 Version: 0.1.0
