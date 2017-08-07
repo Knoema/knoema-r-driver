@@ -2,10 +2,10 @@
 % Please edit documentation in R/ApiDefinitions.R
 \name{Dimension}
 \alias{Dimension}
-\title{The class contains dimension description and dimnesion items}
+\title{The class contains dimension description and dimension items}
 \usage{
 Dimension(data)
 }
 \description{
-The class contains dimension description and dimnesion items
+The class contains dimension description and dimension items
 }

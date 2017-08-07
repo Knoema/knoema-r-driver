@@ -2,7 +2,7 @@
 
 #' The function compares strings ignoring case
 #' @export
-isequal_strings_ignorecase <- function (first, second){
+IsEqualStringsIgnoreCase <- function (first, second){
   if (!is.null(first) & !is.null(second))
   {
     return (toupper(first) == toupper(second))
@@ -13,7 +13,7 @@ isequal_strings_ignorecase <- function (first, second){
   }
 }
 
-frequency_to_int <- function(freq) {
+FrequencyToInt <- function(freq) {
 
   if (is.null(freq) || is.na(freq)) {
     return(365)

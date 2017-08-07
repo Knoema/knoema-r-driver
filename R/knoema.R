@@ -17,23 +17,22 @@
 knoema.get <- function(datasetId, selection,type="ts", host = "", app_id="", app_secret="")
 {
   if (host == "")
-    if (Sys.getenv("KNOEMA_HOST") == "")
+    if (Sys.getenv("KNOEMA_HOST") == ""){
       host = "knoema.com"
-    else
+    } else {
       host = Sys.getenv("KNOEMA_HOST")
+    }
   client = ApiClient(host, app_id, app_secret)
-  if (!is.character(datasetId))
-  {
+  if (!is.character(datasetId)){
     e = simpleError(sprintf("DatasetId should be a string. Can't be %1s",typeof(datasetId)))
     stop(e)
   }
-  dataset <- client$get_dataset(datasetId)
-  if (is.character(dataset))
-  {
+  dataset <- client$GetDataset(datasetId)
+  if (is.character(dataset)){
     error = simpleError(dataset)
     stop(error)
   }
-  data_reader <- DataReader(client,dataset,selection)
-  series <- data_reader$get_frame(type)
+  data.reader <- DataReader(client,dataset,selection)
+  series <- data.reader$GetFrame(type)
   return (series)
 }

@@ -4,80 +4,77 @@
 #' @export
 #' @importFrom  jsonlite toJSON
 DimensionModel <- function (data){
-  dimensionModel=list(
+  dimension.model=list(
     key = data$key,
     id = data$id,
     name = data$name
   )
 
-  dimensionModel <- list2env(dimensionModel)
-  class(dimensionModel) <- "DimensionModel"
-  return(dimensionModel)
+  dimension.model <- list2env(dimension.model)
+  class(dimension.model) <- "DimensionModel"
+  return(dimension.model)
 }
 
 #' @export
 DimensionModelList <- function (data){
-  dimensionModelList=list()
+  dimension.model.list=list()
 
-  for (dim in data)
-  {
-    dimModel <- DimensionModel(dim)
-    dimensionModelList<-c(dimensionModelList, dimModel)
+  for (dim in data) {
+    dim.model <- DimensionModel(dim)
+    dimension.model.list<-c(dimension.model.list, dim.model)
   }
-  class(dimensionModelList) <- "DimensionModelList"
-  return(dimensionModelList)
+  class(dimension.model.list) <- "DimensionModelList"
+  return(dimension.model.list)
 }
 
 #' The class contains dimension member information
 #' @export
 DimensionMember <- function(data){
-  dimensionMember=list(
+  dimension.member=list(
     key = data$key,
     name = data$name,
     level = data$level,
     hasdata = data$hasData,
     fields = data$fields
   )
-  dimensionMember <- list2env(dimensionMember)
-  class(dimensionMember) <- "DimensionMember"
-  return(dimensionMember)
+  dimension.member <- list2env(dimension.member)
+  class(dimension.member) <- "DimensionMember"
+  return(dimension.member)
 }
 
-#' The class contains dimension description and dimnesion items
+#' The class contains dimension description and dimension items
 #' @export
 Dimension <- function (data){
   dimension=list(
     items=list()
   )
-  for (i in 1:length(data$items))
-  {
+  for (i in 1:length(data$items)){
     item <- data$items[i][[1]]
     member <- DimensionMember(item)
     dimension$items <-c (dimension$items,member)
   }
 
   # The method searches member of dimension by given member key
-  dimension$findmember_by_key <- function(member_key){
+  dimension$FindMemberByKey <- function(member.key){
     for (item in dimension$items)
-      if (item$key == member_key)
+      if (item$key == member.key)
         return (item)
     return (NULL)
   }
 
   # The method searches member of dimension by given member id
-  dimension$findmember_by_id <- function(member_id){
-    for (item in dimension$items)
-    {
-      if ("id" %in% names(item$fields) & isequal_strings_ignorecase(item$fields$id, member_id))
+  dimension$FindMemberById <- function(member.id){
+    for (item in dimension$items) {
+      if ("id" %in% names(item$fields) & IsEqualStringsIgnoreCase(item$fields$id, member.id))
         return (item)
     }
     return (NULL)
   }
 
   # The method searches member of dimension by given member name
-  dimension$findmember_by_name <-function (member_name){
+  dimension$FindMemberByName <-function (member.name){
     for (item in dimension$items)
-      if (isequal_strings_ignorecase(item$name, member_name))
+      if (IsEqualStringsIgnoreCase(item$name, member.name))
         return (item)
     return (NULL)
   }
@@ -95,11 +92,9 @@ Dataset <-function (data){
   )
 
   # The method searching dimension with a given name
-  dataset$find_dimension_by_name <- function (dim_name){
-    for (dim in dataset$dimensions)
-    {
-      if (isequal_strings_ignorecase(dim$name, dim_name))
-      {
+  dataset$FindDimensionByName <- function (dim.name){
+    for (dim in dataset$dimensions) {
+      if (IsEqualStringsIgnoreCase(dim$name, dim.name)){
         return (dim)
       }
     }
@@ -107,11 +102,9 @@ Dataset <-function (data){
   }
 
   # The method searching dimension with a given id
-  dataset$find_dimension_by_id <- function (dim_id){
-    for (dim in dataset$dimensions)
-    {
-      if (isequal_strings_ignorecase(dim$id, dim_id))
-      {
+  dataset$FindDimensionById <- function (dim.id){
+    for (dim in dataset$dimensions){
+      if (IsEqualStringsIgnoreCase(dim$id, dim.id)){
         return (dim)
       }
     }
@@ -124,72 +117,70 @@ Dataset <-function (data){
 
 #' The class contains pivot request item
 #' @export
-PivotItem <- function(dimensionid,members){
-  pivotItem = list(
-    dimensionid = dimensionid,
+PivotItem <- function(dimension.id,members){
+  pivot.item = list(
+    dimension.id = dimension.id,
     members = members
   )
-  pivotItem <- list2env(pivotItem)
-  class(pivotItem) <- "PivotItem"
-  return(pivotItem)
+  pivot.item <- list2env(pivot.item)
+  class(pivot.item) <- "PivotItem"
+  return(pivot.item)
 }
 
 #' The class contains pivot request item
 #' @export
-PivotTimeItem <- function(dimensionid=NULL, members=NULL, uimode=NULL){
-  pivotTimeItem = list(
-    dimensionid = dimensionid,
+PivotTimeItem <- function(dimension.id=NULL, members=NULL, uimode=NULL){
+  pivot.time.item = list(
+    dimension.id = dimension.id,
     members = members,
     uimode = uimode
   )
-  pivotTimeItem  <- list2env(pivotTimeItem)
-  class(pivotTimeItem) <- "PivotTimeItem"
-  return(pivotTimeItem)
+  pivot.time.item  <- list2env(pivot.time.item)
+  class(pivot.time.item) <- "PivotTimeItem"
+  return(pivot.time.item)
 }
 
 #' The class contains pivot request
 #' @export
 PivotRequest <- function(dataset){
-  pivot_Request = list(
+  pivot.request = list(
     dataset = dataset,
     header = list(),
     stub = list(),
     filter = list(),
     frequencies = list(),
-    get = function(x) pivot_Request[[x]],
-    set = function(x, value) pivot_Request[[x]] <<- value
+    get = function(x) pivot.request[[x]],
+    set = function(x, value) pivot.request[[x]] <<- value
   )
   # Methods
-  pivot_Request$get_item_array <- function (items){
+  pivot.request$GetItemArray <- function (items){
     arr <- list()
     i <- 1
-    if (length(items)>0)
-    {
-      for (item in items)
-      {
-        itemvalues <- list(
-          'DimensionId' = item$dimensionid,
+    if (length(items)>0){
+      for (item in items){
+        item.values <- list(
+          'DimensionId' = item$dimension.id,
           'Members'= item$members
         )
         if (is(item, "PivotTimeItem"))
-          itemvalues['UiMode'] <- item$uimode
-        arr[[i]] <- itemvalues
+          item.values['UiMode'] <- item$uimode
+        arr[[i]] <- item.values
         i <- i + 1
       }
     }
     return (arr)
   }
-  pivot_Request$save_to_json <- function(){
-    requestvalues <- list(
-      'Dataset'= pivot_Request$get('dataset'),
-      'Header' = pivot_Request$get_item_array(pivot_Request$get('header')),
-      'Filter' = pivot_Request$get_item_array(pivot_Request$get('filter')),
-      'Stub' = pivot_Request$get_item_array(pivot_Request$get('stub')),
-      'Frequencies'= pivot_Request$get('frequencies')
+  pivot.request$SaveToJson <- function(){
+    request.values <- list(
+      'Dataset'= pivot.request$get('dataset'),
+      'Header' = pivot.request$GetItemArray(pivot.request$get('header')),
+      'Filter' = pivot.request$GetItemArray(pivot.request$get('filter')),
+      'Stub' = pivot.request$GetItemArray(pivot.request$get('stub')),
+      'Frequencies'= pivot.request$get('frequencies')
     )
 
-    return (toJSON(requestvalues, auto_unbox = TRUE))
+    return (toJSON(request.values, auto_unbox = TRUE))
   }
-  class(pivot_Request) <- "PivotRequest"
-  return(pivot_Request)
+  class(pivot.request) <- "PivotRequest"
+  return(pivot.request)
 }

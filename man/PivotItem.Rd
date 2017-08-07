@@ -4,7 +4,7 @@
 \alias{PivotItem}
 \title{The class contains pivot request item}
 \usage{
-PivotItem(dimensionid, members)
+PivotItem(dimension.id, members)
 }
 \description{
 The class contains pivot request item

@@ -3,25 +3,25 @@
 \name{ApiClient}
 \alias{ApiClient}
 \title{This module contains client that wrap requests and response to Knoema API
-if the parameters "app_id" and "app_secret" are not are not defined, then a public user with a limit of 50 requests is created
+if the parameters "app.id" and "app.secret" are not are not defined, then a public user with a limit of 50 requests is created
 This class configures knoema api.
 The class contains fields:
 host -- the host where kneoma is going to connect
-app_id -- application id that will have access to knoema.
+app.id -- application id that will have access to knoema.
 Application should be created by knoema user or administrator
-app_secret -- code that can be done after application will be created.
-Should be set up together with app_id}
+app.secret -- code that can be done after application will be created.
+Should be set up together with app.id}
 \usage{
-ApiClient(host = "knoema.com", app_id = "", app_secret = "")
+ApiClient(host = "knoema.com", app.id = "", app.secret = "")
 }
 \description{
 This module contains client that wrap requests and response to Knoema API
-if the parameters "app_id" and "app_secret" are not are not defined, then a public user with a limit of 50 requests is created
+if the parameters "app.id" and "app.secret" are not are not defined, then a public user with a limit of 50 requests is created
 This class configures knoema api.
 The class contains fields:
 host -- the host where kneoma is going to connect
-app_id -- application id that will have access to knoema.
+app.id -- application id that will have access to knoema.
 Application should be created by knoema user or administrator
-app_secret -- code that can be done after application will be created.
-Should be set up together with app_id
+app.secret -- code that can be done after application will be created.
+Should be set up together with app.id
 }

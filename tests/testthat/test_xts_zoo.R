@@ -1,3 +1,4 @@
+
 context("get data single series by member id xts")
 test_that("get data single series by member id xts",{
   data_frame = knoema.get('IMFWEO2017Apr', list(country='914', subject='lp'), type = "xts", app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
