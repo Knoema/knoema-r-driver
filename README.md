@@ -19,10 +19,10 @@ How to set these parameters will be shown below.
 # Retrieving series from datasets
 There is one method for retrieving series from datasets in R: the knoema.get method. The method works with knoema datasets.
 
-The following quick call can be used to retrieve a timeserie from dataset::
+The following quick call can be used to retrieve a timeserie from dataset:
 
-   library('knoema')
-   data = knoema.get('IMFWEO2017Apr', list(country='914', subject='ngdp'))
+    library('knoema')
+    data = knoema.get('IMFWEO2017Apr', list(country='914', subject='ngdp'))
    
 where:
 
