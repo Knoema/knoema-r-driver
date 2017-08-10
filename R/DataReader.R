@@ -1,4 +1,4 @@
-#' This class read data from Knoema and transform it to ts,xts or zoo
+#' This class reads data from Knoema and transforms it to ts,xts or zoo
 #' @export
 #' @importFrom lubridate day
 #' @importFrom lubridate week

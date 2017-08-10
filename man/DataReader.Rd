@@ -2,10 +2,10 @@
 % Please edit documentation in R/DataReader.R
 \name{DataReader}
 \alias{DataReader}
-\title{This class read data from Knoema and transform it to ts,xts or zoo}
+\title{This class reads data from Knoema and transforms it to ts,xts or zoo}
 \usage{
 DataReader(client, dataset, selection)
 }
 \description{
-This class read data from Knoema and transform it to ts,xts or zoo
+This class reads data from Knoema and transforms it to ts,xts or zoo
 }

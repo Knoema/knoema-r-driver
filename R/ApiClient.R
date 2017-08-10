@@ -4,12 +4,12 @@
 
 #' The class contains fields:
 
-#' host -- the host where kneoma is going to connect
+#' host -- the host where knoema is going to connect
 
 #' app.id -- application id that will have access to knoema.
 #' Application should be created by knoema user or administrator
 
-#' app.secret -- code that can be done after application will be created.
+#' app.secret -- client secret code that can be got after application will be created.
 #' Should be set up together with app.id
 
 #' @export
@@ -82,7 +82,7 @@ ApiClient <- function(host="knoema.com", app.id = "",app.secret = "") {
     return(res)
   }
 
-  #The method is getting information about dataset byt it's id
+  #The method is getting information about dataset by it's id
   client$GetDataset <- function(dataset.id){
     path <- 'api/1.0/meta/dataset/%1s'
     return (client$ApiGet(sprintf(path, dataset.id)))
