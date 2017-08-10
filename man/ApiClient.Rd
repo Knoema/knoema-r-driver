@@ -7,21 +7,13 @@ if the parameters "app.id" and "app.secret" are not are not defined, then a publ
 This class configures knoema api.
 The class contains fields:
 host -- the host where knoema is going to connect
-app.id -- application id that will have access to knoema.
-Application should be created by knoema user or administrator
-app.secret -- client secret code that can be got after application will be created.
-Should be set up together with app.id}
+The following parameters can be obtained from the inner knoema's application.
+Application should be created by knoema user or administrator after registering on the site knoema.com, in the section "My profile - Apps - create new".}
 \usage{
 ApiClient(host = "knoema.com", app.id = "", app.secret = "")
 }
 \description{
-This module contains client that wrap requests and response to Knoema API
-if the parameters "app.id" and "app.secret" are not are not defined, then a public user with a limit of 50 requests is created
-This class configures knoema api.
-The class contains fields:
-host -- the host where knoema is going to connect
-app.id -- application id that will have access to knoema.
-Application should be created by knoema user or administrator
-app.secret -- client secret code that can be got after application will be created.
-Should be set up together with app.id
+app.id --  client id.
+app.secret -- client secret code.
+app.id  and app.secret should be set up together.
 }

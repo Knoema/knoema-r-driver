@@ -151,7 +151,7 @@ DataReader <- function(client, dataset, selection){
       if (freq == "A")
         start.by.freq <- c(year(min.date),1)
       if (freq == "H") {
-        half.year = (month(min.date)-1)%/%6-1
+        half.year = (month(min.date)-1)%/%6+1
         start.by.freq <- c(year(min.date),half.year)
       }
       if (freq == "Q")

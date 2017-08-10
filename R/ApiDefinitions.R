@@ -1,4 +1,4 @@
-#' This module contains metadata definitions for Knoema API
+# This file contains metadata definitions for Knoema API
 
 #' The class contains dimension description
 #' @export

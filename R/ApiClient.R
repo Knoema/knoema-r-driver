@@ -5,12 +5,12 @@
 #' The class contains fields:
 
 #' host -- the host where knoema is going to connect
-
-#' app.id -- application id that will have access to knoema.
-#' Application should be created by knoema user or administrator
-
-#' app.secret -- client secret code that can be got after application will be created.
-#' Should be set up together with app.id
+#' The following parameters can be obtained from the inner knoema's application.
+#' Application should be created by knoema user or administrator after registering on the site knoema.com, in the section "My profile - Apps - create new".
+#'
+#' app.id --  client id.
+#' app.secret -- client secret code.
+#' app.id  and app.secret should be set up together.
 
 #' @export
 #' @importFrom digest hmac

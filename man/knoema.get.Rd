@@ -22,7 +22,7 @@ knoema.get(datasetId, selection, type = "ts", host = "", app_id = "",
 \item{app_secret}{is secret client code from knoema application
 By default uses public user for knoema.com
 By default the package allows you to work only with public datasets from the site knoema.com.
-If you want work with private datasets or from other hosts, you need to set optional parameters host, app_id and app_secret
+If you want to work with private datasets or from other hosts, you need to set optional parameters host, app_id and app_secret
 You can get parameters app_id and app_secret after registering on the site knoema.com, in the section "My profile - Apps - create new" (or use existing applications)}
 }
 \value{
