@@ -3,7 +3,7 @@ Type: Package
 Title: The package can be used for obtaining data from the datasets from the site knoema.com
 Version: 0.1.0
 Author: knoema
-Maintainer: The package maintainer <ketiketi2507@gmail.com>
+Maintainer: The package maintainer <info@knoema.com>
 Description: The package can be used for obtaining data from the datasets from the site knoema.com. 
       Supported formats: ts, xts, zoo.
 License: MIT
