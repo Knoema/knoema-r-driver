@@ -24,7 +24,7 @@ FrequencyToInt <- function(freq) {
            'M'  = 12,
            'Q' = 4,
            'H' = 2,
-           'Y'   = 1,
+           'A'   = 1,
            1)
   }
 }
