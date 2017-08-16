@@ -1,18 +1,18 @@
-#' This module contains client that wrap requests and response to Knoema API
-#' if the parameters "app.id" and "app.secret" are not are not defined, then a public user with a limit of 50 requests is created
-#' This class configures knoema api.
+# This module contains client that wrap requests and response to Knoema API
+# if the parameters "app.id" and "app.secret" are not defined, then a public user with a limit of 50 requests is created
+# This class configures knoema api.
 
-#' The class contains fields:
+# The class contains fields:
 
-#' host -- the host where knoema is going to connect
-#' The following parameters can be obtained from the inner knoema's application.
-#' Application should be created by knoema user or administrator after registering on the site knoema.com, in the section "My profile - Apps - create new".
-#'
-#' app.id --  client id.
-#' app.secret -- client secret code.
-#' app.id  and app.secret should be set up together.
+# host -- the host where knoema is going to connect
+# The following parameters can be obtained from the knoema's application.
+# Application should be created by knoema user or administrator after registering on the site knoema.com, in the section "My profile - Apps - create new".
+#
+# app.id --  client id.
+# app.secret -- client secret code.
+# app.id  and app.secret should be set up together.
 
-#' @export
+
 #' @importFrom digest hmac
 #' @importFrom base64enc base64encode
 #' @importFrom httr GET
@@ -82,7 +82,7 @@ ApiClient <- function(host="knoema.com", app.id = "",app.secret = "") {
     return(res)
   }
 
-  #The method is getting information about dataset by it's id
+  #The method is getting information about dataset by its id
   client$GetDataset <- function(dataset.id){
     path <- 'api/1.0/meta/dataset/%1s'
     return (client$ApiGet(sprintf(path, dataset.id)))

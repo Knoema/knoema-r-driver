@@ -1,7 +1,7 @@
 
 context("get data single series by member id xts")
 test_that("get data single series by member id xts",{
-  data_frame = knoema.get('IMFWEO2017Apr', list(country='914', subject='lp'), type = "xts", app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = knoema.get('IMFWEO2017Apr', list(country='914', subject='lp'), type = "xts", app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),1)
 
   sname = 'A - Albania - Population (Persons)'
@@ -14,7 +14,7 @@ test_that("get data single series by member id xts",{
 
 context("get data multi series by member id zoo")
 test_that("get data multi series by member id zoo",{
-  data_frame = knoema.get('IMFWEO2017Apr', list(country='914;512;111', subject='lp;ngdp'), type= "zoo", app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = knoema.get('IMFWEO2017Apr', list(country='914;512;111', subject='lp;ngdp'), type= "zoo", app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
   sname = 'A - United States - Gross domestic product, current prices (National currency)'
@@ -29,7 +29,7 @@ test_that("get data multi series by member id zoo",{
 context("get data multi series by member name xts")
 test_that("get data multi series by member name xts",{
   subj_names = 'Gross domestic product, current prices (National currency);population (persons)'
-  data_frame = knoema.get('IMFWEO2017Apr', list(country='albania;afghanistan;united states', subject=subj_names), type = "xts", app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = knoema.get('IMFWEO2017Apr', list(country='albania;afghanistan;united states', subject=subj_names), type = "xts", app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
   sname = 'A - United States - Gross domestic product, current prices (National currency)'
@@ -43,7 +43,7 @@ test_that("get data multi series by member name xts",{
 
 context("get data multi series by member id range zoo")
 test_that("get data multi series by member id range zoo",{
-  data_frame = knoema.get('IMFWEO2017Apr', list(country='914;512;111', subject='lp;ngdp', timerange='2015-2020'), type = "zoo", app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = knoema.get('IMFWEO2017Apr', list(country='914;512;111', subject='lp;ngdp', timerange='2015-2020'), type = "zoo", app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
   sname = 'A - United States - Gross domestic product, current prices (National currency)'
@@ -57,7 +57,7 @@ test_that("get data multi series by member id range zoo",{
 
 context("get data single series different frequencies by member id xts")
 test_that("get data single series different frequencies by member id xts",{
-  data_frame = knoema.get('MEI_BTS_COS_2015', list(location='AT', subject='BSCI', measure='blsa'),type="xts", app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = knoema.get('MEI_BTS_COS_2015', list(location='AT', subject='BSCI', measure='blsa'),type="xts", app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
   sname = 'M - Austria - Confidence indicators - Balance, s.a.'
@@ -81,7 +81,7 @@ test_that("get data single series different frequencies by member id xts",{
 
 context("get data multi series single frequency by member id zoo")
 test_that("get data multi series single frequency by member id zoo",{
-  data_frame = knoema.get('MEI_BTS_COS_2015', list(location='AT;AU', subject='BSCI', measure='blsa', frequency='Q'), type="zoo", app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = knoema.get('MEI_BTS_COS_2015', list(location='AT;AU', subject='BSCI', measure='blsa', frequency='Q'), type="zoo", app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
   sname = 'Q - Austria - Confidence indicators - Balance, s.a.'
@@ -95,7 +95,7 @@ test_that("get data multi series single frequency by member id zoo",{
 
 context("get data multi series multi frequency by member id xts")
 test_that("get data multi series multi frequency by member id xts",{
-  data_frame = knoema.get('MEI_BTS_COS_2015', list(location='AT;AU', subject='BSCI', measure='blsa', frequency='Q;M'), type="xts", app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = knoema.get('MEI_BTS_COS_2015', list(location='AT;AU', subject='BSCI', measure='blsa', frequency='Q;M'), type="xts", app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),3)
 
   sname = 'M - Austria - Confidence indicators - Balance, s.a.'
@@ -109,7 +109,7 @@ test_that("get data multi series multi frequency by member id xts",{
 
 context("get data multi series multi frequency by member id range zoo")
 test_that("get data multi series multi frequency by member id range zoo",{
-  data_frame = knoema.get('MEI_BTS_COS_2015', list(location='AT;BE', subject='BSCI', measure='blsa', frequency='Q;M', timerange='2010M1-2015M11'), type="zoo", app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = knoema.get('MEI_BTS_COS_2015', list(location='AT;BE', subject='BSCI', measure='blsa', frequency='Q;M', timerange='2010M1-2015M11'), type="zoo", app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),3)
 
   sname = 'M - Austria - Confidence indicators - Balance, s.a.'
@@ -130,7 +130,7 @@ test_that("get data from dataset with multiword dimnames xts",{
                                                 'Type of entity'= 'ALL',
                                                 'Accounting entry'= 'NET',
                                                 'Level of counterpart'= 'IMC',
-                                                'Currency'= 'USD'),"xts",app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+                                                'Currency'= 'USD'),"xts",app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
 
   expect_equal(length(data_frame),1)
 
@@ -146,7 +146,7 @@ test_that("get data from dataset with multiword dimnames xts",{
 context("get data multi series by member key zoo")
 test_that("get data multi series by member key zoo",{
 
-  data_frame = knoema.get('IMFWEO2017Apr', list(country='1000010;1000000;1001830', subject='1000370;1000040'),"zoo", app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = knoema.get('IMFWEO2017Apr', list(country='1000010;1000000;1001830', subject='1000370;1000040'),"zoo", app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
   sname = 'A - United States - Gross domestic product, current prices (National currency)'
@@ -168,7 +168,7 @@ test_that("get data from dataset by dim ids xts",{
                                                 'Type-of-entity'= 'ALL',
                                                 'Accounting-entry'= 'NET',
                                                 'Level-of-counterpart'= 'IMC',
-                                                'Currency'= 'USD'), "xts",app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+                                                'Currency'= 'USD'), "xts",app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),1)
 
   sname = 'A - Australia - WORLD - Directional principle: Inward - FDI financial flows - Total - All resident units - Net - Immediate counterpart (Immediate investor or immediate host) - US Dollar'

@@ -1,7 +1,7 @@
-##' Helper functions
+## Helper functions
 
-#' The function compares strings ignoring case
-#' @export
+# The function compares strings ignoring case
+
 IsEqualStringsIgnoreCase <- function (first, second){
   if (!is.null(first) & !is.null(second))
   {

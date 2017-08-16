@@ -13,7 +13,7 @@ To install the [devtools](https://cran.r-project.org/package=devtools) package:
 
 # Authentication
 By default, the package allows you to work only with public datasets from the site knoema.com and has a limit on the number of requests.
-To make full use of the package we recommend you set parameters app_id and app_secret. You can get these parameters after registering on the site knoema.com, in the section "My profile - Apps - create new" (or use existing applications).
+To make full use of the package we recommend you set parameters app.id and app.secret. You can get these parameters after registering on the site knoema.com, in the section "My profile - Apps - create new" (or use existing applications).
 How to set these parameters will be shown below.
 
 # Retrieving series from datasets
@@ -58,11 +58,11 @@ The package supports such formats as "ts", "xts" and "zoo". By default type is e
 
     data = knoema.get("IMFWEO2017Apr",list (country='914;512;111', subject='lp;ngdp'), type = "zoo") 
     
-To take into account the parameters app_id and app_secret in a function, you must explicitly specify them::
+In order to get access to private datasets please use parameters app.id and app.secret in a function:
 
-    data = knoema.get('MEI_BTS_COS_2015', list(location='AT;AU', subject='BSCI', measure='blsa', frequency='Q;M'), type="xts", app_id='bHcV5UkOVyKcBw',app_secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+    data = knoema.get('MEI_BTS_COS_2015', list(location='AT;AU', subject='BSCI', measure='blsa', frequency='Q;M'), type="xts", app.id='some app id',app.secret="some app secret")
 
-Note: If the function returns an error 403(Forbidden), try using other parameters app_id and app_secret.
+Note: If the function returns an error 403(Forbidden), try using other parameters app.id and app.secret.
 
 # Converting timeseries in different formats
 

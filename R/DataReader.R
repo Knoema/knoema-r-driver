@@ -1,5 +1,5 @@
-#' This class reads data from Knoema and transforms it to ts,xts or zoo
-#' @export
+# This class reads data from Knoema and transforms it to ts,xts or zoo
+
 #' @importFrom lubridate day
 #' @importFrom lubridate week
 #' @importFrom lubridate month
@@ -15,6 +15,8 @@
 #' @importFrom zoo is.zoo
 #' @importFrom xts is.xts
 #' @importFrom zoo coredata
+#' @importFrom stats ts
+#' @importFrom methods is
 
 
 DataReader <- function(client, dataset, selection){
@@ -49,9 +51,9 @@ DataReader <- function(client, dataset, selection){
   }
 
 
-  reader$GetDimMembers <- function(dim, splited.values){
+  reader$GetDimMembers <- function(dim, split.values){
     members <- c()
-    for (value in splited.values) {
+    for (value in split.values) {
       if (is.null(value)) {
         error <- simpleError(sprintf('Selection for dimension %1s is empty',dim$name))
         stop(error)

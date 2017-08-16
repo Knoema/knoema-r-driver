@@ -1,7 +1,7 @@
 # This file contains metadata definitions for Knoema API
 
-#' The class contains dimension description
-#' @export
+# The class contains dimension description
+
 #' @importFrom  jsonlite toJSON
 DimensionModel <- function (data){
   dimension.model=list(
@@ -15,7 +15,6 @@ DimensionModel <- function (data){
   return(dimension.model)
 }
 
-#' @export
 DimensionModelList <- function (data){
   dimension.model.list=list()
 
@@ -27,8 +26,7 @@ DimensionModelList <- function (data){
   return(dimension.model.list)
 }
 
-#' The class contains dimension member information
-#' @export
+# The class contains dimension member information
 DimensionMember <- function(data){
   dimension.member=list(
     key = data$key,
@@ -42,8 +40,7 @@ DimensionMember <- function(data){
   return(dimension.member)
 }
 
-#' The class contains dimension description and dimension items
-#' @export
+# The class contains dimension description and dimension items
 Dimension <- function (data){
   dimension=list(
     items=list()
@@ -83,8 +80,7 @@ Dimension <- function (data){
   return(dimension)
 }
 
-#' The class contains dataset description
-#' @export
+# The class contains dataset description
 Dataset <-function (data){
   dataset = list(
     id = data$id,
@@ -115,8 +111,7 @@ Dataset <-function (data){
   return(dataset)
 }
 
-#' The class contains pivot request item
-#' @export
+# The class contains pivot request item
 PivotItem <- function(dimension.id,members){
   pivot.item = list(
     dimension.id = dimension.id,
@@ -127,8 +122,7 @@ PivotItem <- function(dimension.id,members){
   return(pivot.item)
 }
 
-#' The class contains pivot request item
-#' @export
+# The class contains pivot request item
 PivotTimeItem <- function(dimension.id=NULL, members=NULL, uimode=NULL){
   pivot.time.item = list(
     dimension.id = dimension.id,
@@ -140,8 +134,7 @@ PivotTimeItem <- function(dimension.id=NULL, members=NULL, uimode=NULL){
   return(pivot.time.item)
 }
 
-#' The class contains pivot request
-#' @export
+# The class contains pivot request
 PivotRequest <- function(dataset){
   pivot.request = list(
     dataset = dataset,

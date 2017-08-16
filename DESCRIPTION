@@ -9,7 +9,7 @@ Authors@R: c(person("Ekaterina Chirkova", role=c("aut", "cre"), email="chirkova@
 Maintainer: Pavel Pimenov <pimenov@knoema.com>
 Description: The package can be used for obtaining data from the datasets from the site knoema.com. 
       Supported formats: ts, xts, zoo.
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: httr,
@@ -18,7 +18,8 @@ Imports: httr,
     digest,
     lubridate,
     xts,
-    zoo
+    zoo,
+    methods
 Depends: R (>= 3.4.0)
 RoxygenNote: 6.0.1
 Suggests: testthat
