@@ -19,12 +19,12 @@ FrequencyToInt <- function(freq) {
     return(365)
   } else {
     switch(freq,
-           'D'    = 365,
-           'W'   = 52,
-           'M'  = 12,
-           'Q' = 4,
-           'H' = 2,
-           'A'   = 1,
+           "D"    = 365,
+           "W"   = 52,
+           "M"  = 12,
+           "Q" = 4,
+           "H" = 2,
+           "A"   = 1,
            1)
   }
 }

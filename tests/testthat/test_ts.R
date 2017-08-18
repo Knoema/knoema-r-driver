@@ -1,9 +1,9 @@
 context("get data single series by member id ts")
 test_that("get data single series by member id ts",{
-  data_frame = knoema.get('IMFWEO2017Apr', list(country='914', subject='lp'), app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Apr", list(country = "914", subject = "lp"), client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),1)
 
-  sname = 'A - Albania - Population (Persons)'
+  sname = "A - Albania - Population (Persons)"
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),FALSE)
@@ -13,10 +13,10 @@ test_that("get data single series by member id ts",{
 
 context("get data multi series by member id ts")
 test_that("get data multi series by member id ts",{
-  data_frame = knoema.get('IMFWEO2017Apr', list(country='914;512;111', subject='lp;ngdp'), app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Apr", list(country="914;512;111", subject="lp;ngdp"), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
-  sname = 'A - United States - Gross domestic product, current prices (National currency)'
+  sname = "A - United States - Gross domestic product, current prices (National currency)"
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),FALSE)
@@ -27,11 +27,11 @@ test_that("get data multi series by member id ts",{
 
 context("get data multi series by member name ts")
 test_that("get data multi series by member name",{
-  subj_names = 'Gross domestic product, current prices (National currency);population (persons)'
-  data_frame = knoema.get('IMFWEO2017Apr', list(country='albania;afghanistan;united states', subject=subj_names), app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  subj_names = "Gross domestic product, current prices (National currency);population (persons)"
+  data_frame = Knoema("IMFWEO2017Apr", list(country="albania;afghanistan;united states", subject=subj_names), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
-  sname = 'A - United States - Gross domestic product, current prices (National currency)'
+  sname = "A - United States - Gross domestic product, current prices (National currency)"
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),FALSE)
@@ -42,10 +42,10 @@ test_that("get data multi series by member name",{
 
 context("get data multi series by member id range ts")
 test_that("get data multi series by member id range",{
-  data_frame = knoema.get('IMFWEO2017Apr', list(country='914;512;111', subject='lp;ngdp', timerange='2015-2020'), app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Apr", list(country="914;512;111", subject="lp;ngdp", timerange="2015-2020"), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
-  sname = 'A - United States - Gross domestic product, current prices (National currency)'
+  sname = "A - United States - Gross domestic product, current prices (National currency)"
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),FALSE)
@@ -56,10 +56,10 @@ test_that("get data multi series by member id range",{
 
 context("get data single series different frequencies by member id ts")
 test_that("get data single series different frequencies by member id ts",{
-  data_frame = knoema.get('MEI_BTS_COS_2015', list(location='AT', subject='BSCI', measure='blsa'), app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("MEI_BTS_COS_2015", list(location="AT", subject="BSCI", measure="blsa"), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
-  sname = 'M - Austria - Confidence indicators - Balance, s.a.'
+  sname = "M - Austria - Confidence indicators - Balance, s.a."
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),FALSE)
@@ -67,7 +67,7 @@ test_that("get data single series different frequencies by member id ts",{
   expect_equal(time_ser[1], -5.0)
   expect_equal(time_ser[length(time_ser)], 5.1)
 
-  sname = 'Q - Austria - Confidence indicators - Balance, s.a.'
+  sname = "Q - Austria - Confidence indicators - Balance, s.a."
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),FALSE)
@@ -80,10 +80,10 @@ test_that("get data single series different frequencies by member id ts",{
 
 context("get data multi series single frequency by member id ts")
 test_that("get data multi series single frequency by member id ts",{
-  data_frame = knoema.get('MEI_BTS_COS_2015', list(location='AT;AU', subject='BSCI', measure='blsa', frequency='Q'), app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("MEI_BTS_COS_2015", list(location="AT;AU", subject="BSCI", measure="blsa", frequency="Q"), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
-  sname = 'Q - Austria - Confidence indicators - Balance, s.a.'
+  sname = "Q - Austria - Confidence indicators - Balance, s.a."
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),FALSE)
@@ -94,10 +94,10 @@ test_that("get data multi series single frequency by member id ts",{
 
 context("get data multi series multi frequency by member id ts")
 test_that("get data multi series multi frequency by member id ts",{
-  data_frame = knoema.get('MEI_BTS_COS_2015', list(location='AT;AU', subject='BSCI', measure='blsa', frequency='Q;M'), app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("MEI_BTS_COS_2015", list(location="AT;AU", subject="BSCI", measure="blsa", frequency="Q;M"), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),3)
 
-  sname = 'M - Austria - Confidence indicators - Balance, s.a.'
+  sname = "M - Austria - Confidence indicators - Balance, s.a."
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),FALSE)
@@ -108,10 +108,10 @@ test_that("get data multi series multi frequency by member id ts",{
 
 context("get data multi series multi frequency by member id range ts")
 test_that("get data multi series multi frequency by member id range ts",{
-  data_frame = knoema.get('MEI_BTS_COS_2015', list(location='AT;BE', subject='BSCI', measure='blsa', frequency='Q;M', timerange='2010M1-2015M11'), app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("MEI_BTS_COS_2015", list(location="AT;BE", subject="BSCI", measure="blsa", frequency="Q;M", timerange="2010M1-2015M11"), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),3)
 
-  sname = 'M - Austria - Confidence indicators - Balance, s.a.'
+  sname = "M - Austria - Confidence indicators - Balance, s.a."
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),FALSE)
@@ -122,18 +122,18 @@ test_that("get data multi series multi frequency by member id range ts",{
 
 context("get data from dataset with multiword dimnames ts")
 test_that("get data from dataset with multiword dimnames ts",{
-  data_frame = knoema.get('FDI_FLOW_CTRY', list('Reporting country'= 'AUS',
-                                                'Partner country/territory'= 'w0',
-                                                'Measurement principle'= 'DI',
-                                                'Type of FDI'= 'T_FA_F',
-                                                'Type of entity'= 'ALL',
-                                                'Accounting entry'= 'NET',
-                                                'Level of counterpart'= 'IMC',
-                                                'Currency'= 'USD'),"ts",app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("FDI_FLOW_CTRY", list("Reporting country"= "AUS",
+                                                "Partner country/territory"= "w0",
+                                                "Measurement principle"= "DI",
+                                                "Type of FDI"= "T_FA_F",
+                                                "Type of entity"= "ALL",
+                                                "Accounting entry"= "NET",
+                                                "Level of counterpart"= "IMC",
+                                                "Currency"= "USD"),"ts",client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
 
   expect_equal(length(data_frame),1)
 
-  sname = 'A - Australia - WORLD - Directional principle: Inward - FDI financial flows - Total - All resident units - Net - Immediate counterpart (Immediate investor or immediate host) - US Dollar'
+  sname = "A - Australia - WORLD - Directional principle: Inward - FDI financial flows - Total - All resident units - Net - Immediate counterpart (Immediate investor or immediate host) - US Dollar"
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),FALSE)
@@ -145,10 +145,10 @@ test_that("get data from dataset with multiword dimnames ts",{
 context("get data multi series by member key ts")
 test_that("get data multi series by member key ts",{
 
-  data_frame = knoema.get('IMFWEO2017Apr', list(country='1000010;1000000;1001830', subject='1000370;1000040'), app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Apr", list(country="1000010;1000000;1001830", subject="1000370;1000040"), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
-  sname = 'A - United States - Gross domestic product, current prices (National currency)'
+  sname = "A - United States - Gross domestic product, current prices (National currency)"
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),FALSE)
@@ -160,17 +160,17 @@ test_that("get data multi series by member key ts",{
 
 context("get data from dataset by dim ids ts")
 test_that("get data from dataset by dim ids ts",{
-  data_frame = knoema.get('FDI_FLOW_CTRY', list('Reporting-country'= 'AUS',
-                                                'Partner-country'= 'w0',
-                                                'Measurement-principle'= 'DI',
-                                                'Type-of-FDI'= 'T_FA_F',
-                                                'Type-of-entity'= 'ALL',
-                                                'Accounting-entry'= 'NET',
-                                                'Level-of-counterpart'= 'IMC',
-                                                'Currency'= 'USD'), app.id='bHcV5UkOVyKcBw',app.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("FDI_FLOW_CTRY", list("Reporting-country"= "AUS",
+                                                "Partner-country"= "w0",
+                                                "Measurement-principle"= "DI",
+                                                "Type-of-FDI"= "T_FA_F",
+                                                "Type-of-entity"= "ALL",
+                                                "Accounting-entry"= "NET",
+                                                "Level-of-counterpart"= "IMC",
+                                                "Currency"= "USD"), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),1)
 
-  sname = 'A - Australia - WORLD - Directional principle: Inward - FDI financial flows - Total - All resident units - Net - Immediate counterpart (Immediate investor or immediate host) - US Dollar'
+  sname = "A - Australia - WORLD - Directional principle: Inward - FDI financial flows - Total - All resident units - Net - Immediate counterpart (Immediate investor or immediate host) - US Dollar"
 
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),TRUE)

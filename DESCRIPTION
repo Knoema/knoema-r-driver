@@ -1,14 +1,12 @@
-Package: knoema
-Type: Package
-Title: Official R package for Knoema's API
-Version: 0.1.0
-Date: 2017-08-11
-Authors@R: c(person("Ekaterina Chirkova", role=c("aut", "cre"), email="chirkova@knoema.com"),
-    person("Pavel Pimenov", role="aut", email="pimenov@knoema.com"),
+Package: Knoema
+Title: Official R Package for Knoema's API
+Version: 0.1.4
+Date: 2017-08-18
+Authors@R: c(person("Pavel Pimenov", role=c("aut", "cre"), email="pimenov@knoema.com"),
+    person("Ekaterina Chirkova", role="aut", email="chirkova@knoema.com"),
     person("Knoema", role="cph"))
 Maintainer: Pavel Pimenov <pimenov@knoema.com>
-Description: The package can be used for obtaining data from the datasets from the site knoema.com. 
-      Supported formats: ts, xts, zoo.
+Description: Functionality for interacting with Knoema API in order to get data in the following formats: ts, xts, zoo.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -20,7 +18,7 @@ Imports: httr,
     xts,
     zoo,
     methods
-Depends: R (>= 3.4.0)
+Depends: R (>= 3.3.0)
 RoxygenNote: 6.0.1
 Suggests: testthat
 URL: https://github.com/Knoema/knoema-r-driver

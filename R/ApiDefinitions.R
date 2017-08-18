@@ -152,11 +152,11 @@ PivotRequest <- function(dataset){
     if (length(items)>0){
       for (item in items){
         item.values <- list(
-          'DimensionId' = item$dimension.id,
-          'Members'= item$members
+          "DimensionId" = item$dimension.id,
+          "Members" = item$members
         )
         if (is(item, "PivotTimeItem"))
-          item.values['UiMode'] <- item$uimode
+          item.values["UiMode"] <- item$uimode
         arr[[i]] <- item.values
         i <- i + 1
       }
@@ -165,11 +165,11 @@ PivotRequest <- function(dataset){
   }
   pivot.request$SaveToJson <- function(){
     request.values <- list(
-      'Dataset'= pivot.request$get('dataset'),
-      'Header' = pivot.request$GetItemArray(pivot.request$get('header')),
-      'Filter' = pivot.request$GetItemArray(pivot.request$get('filter')),
-      'Stub' = pivot.request$GetItemArray(pivot.request$get('stub')),
-      'Frequencies'= pivot.request$get('frequencies')
+      "Dataset"= pivot.request$get("dataset"),
+      "Header" = pivot.request$GetItemArray(pivot.request$get("header")),
+      "Filter" = pivot.request$GetItemArray(pivot.request$get("filter")),
+      "Stub" = pivot.request$GetItemArray(pivot.request$get("stub")),
+      "Frequencies" = pivot.request$get("frequencies")
     )
 
     return (toJSON(request.values, auto_unbox = TRUE))

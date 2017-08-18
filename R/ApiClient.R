@@ -1,5 +1,5 @@
 # This module contains client that wrap requests and response to Knoema API
-# if the parameters "app.id" and "app.secret" are not defined, then a public user with a limit of 50 requests is created
+# if the parameters "client.id" and "client.secret" are not defined, then a public user with a limit of 50 requests is created
 # This class configures knoema api.
 
 # The class contains fields:
@@ -8,9 +8,9 @@
 # The following parameters can be obtained from the knoema's application.
 # Application should be created by knoema user or administrator after registering on the site knoema.com, in the section "My profile - Apps - create new".
 #
-# app.id --  client id.
-# app.secret -- client secret code.
-# app.id  and app.secret should be set up together.
+# client.id --  client id.
+# client.secret -- client secret code.
+# client.id  and client.secret should be set up together.
 
 
 #' @importFrom digest hmac
@@ -23,11 +23,11 @@
 #' @importFrom httr http_error
 #' @importFrom httr http_status
 
-ApiClient <- function(host="knoema.com", app.id = "",app.secret = "") {
+ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
   client = list(
     host = host,
-    app.id = app.id,
-    app.secret = app.secret
+    client.id = client.id,
+    client.secret = client.secret
   )
   #Add a few more methods
 
@@ -36,17 +36,17 @@ ApiClient <- function(host="knoema.com", app.id = "",app.secret = "") {
   }
 
   client$GetAuthorization <- function(){
-    if (client$app.id != "" || client$app.secret != "") {
+    if (client$client.id != "" || client$client.secret != "") {
       key <- format(Sys.time(), "%d-%m-%y-%H", tz = "UCT")
-      hash <-  hmac(key, client$app.secret, "sha1", raw = TRUE)
+      hash <-  hmac(key, client$client.secret, "sha1", raw = TRUE)
       secrethash <- base64encode(hash)
-      auth = sprintf("Knoema %1s:%2s:1.2", client$app.id, secrethash)
+      auth = sprintf("Knoema %1s:%2s:1.2", client$client.id, secrethash)
       return (auth)
     }
     return (NULL)
   }
 
-  client$ApiGet <- function(apipath, query=NULL){
+  client$ApiGet <- function(apipath, query = NULL){
     url <- client$GetUrl(apipath)
     if (!is.null(query)) {
       url <- sprintf("%1s?%2s", url, query)
@@ -71,7 +71,7 @@ ApiClient <- function(host="knoema.com", app.id = "",app.secret = "") {
     if (is.null(auth)){
       p <- POST(url, content_type("application/json"), body = request, encode = "json")
     } else {
-      p <- POST(url,content_type("application/json"),add_headers("Authorization"= auth), body = request,encode = "json")
+      p <- POST(url, content_type("application/json"), add_headers("Authorization"= auth), body = request, encode = "json")
     }
     if (http_error(p))
     {
@@ -84,19 +84,19 @@ ApiClient <- function(host="knoema.com", app.id = "",app.secret = "") {
 
   #The method is getting information about dataset by its id
   client$GetDataset <- function(dataset.id){
-    path <- 'api/1.0/meta/dataset/%1s'
+    path <- "api/1.0/meta/dataset/%1s"
     return (client$ApiGet(sprintf(path, dataset.id)))
   }
 
   #The method is getting information about dimension with items
   client$GetDimension <- function(dataset.id, dimension.name){
-    path <- 'api/1.0/meta/dataset/%1s/dimension/%2s'
+    path <- "api/1.0/meta/dataset/%1s/dimension/%2s"
     return (client$ApiGet(sprintf(path, dataset.id, dimension.name)))
   }
 
   #The method is getting data by pivot request
   client$GetData <- function (pivot.request){
-    path <- 'api/1.0/data/pivot'
+    path <- "api/1.0/data/pivot"
     return (client$ApiPost(path, pivot.request))
   }
 

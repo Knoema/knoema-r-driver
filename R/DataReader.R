@@ -44,8 +44,8 @@ DataReader <- function(client, dataset, selection){
     }
     list.condition <- sapply(dims, function(x) ! x %in% dims.from.filter)
     out.of.filter.dim.names <- dims[list.condition]
-    if (length (out.of.filter.dim.names)>0) {
-      error <- simpleError(sprintf('The following dimension(s) are not set: %1s',paste(out.of.filter.dim.names,sep="", collapse =",")))
+    if (length (out.of.filter.dim.names) > 0) {
+      error <- simpleError(sprintf("The following dimension(s) are not set: %1s",paste(out.of.filter.dim.names,sep="", collapse =",")))
       stop(error)
     }
   }
@@ -55,7 +55,7 @@ DataReader <- function(client, dataset, selection){
     members <- c()
     for (value in split.values) {
       if (is.null(value)) {
-        error <- simpleError(sprintf('Selection for dimension %1s is empty',dim$name))
+        error <- simpleError(sprintf("Selection for dimension %1s is empty",dim$name))
         stop(error)
       }
       member <- dim$FindMemberById(value)
@@ -74,7 +74,7 @@ DataReader <- function(client, dataset, selection){
     list.condition <- !values %in% correct.freq
     list.err <- values[list.condition]
     if (length(list.err)>0) {
-      error <- simpleError(sprintf('The following frequencies are not correct: %1s',paste(list.err,sep="", collapse =",")))
+      error <- simpleError(sprintf("The following frequencies are not correct: %1s",paste(list.err,sep="", collapse =",")))
       stop(error)
     }
     return (TRUE)
@@ -93,34 +93,34 @@ DataReader <- function(client, dataset, selection){
       splited.values <- as.list(strsplit(value, ';')[[1]])
       if (item == "frequency") {
         if (reader$CheckCorrectFrequencies(splited.values)) {
-          request$set('frequencies', splited.values)
+          request$set("frequencies", splited.values)
           next
         }
       }
       dim <- reader$FindDimension(item)
       if (is.null(dim))
       {
-         error <- simpleError(sprintf('Dimension with id or name %1s is not found',item))
+         error <- simpleError(sprintf("Dimension with id or name %1s is not found",item))
          stop(error)
       }
       filter.dims <- c(filter.dims,dim)
       dim2 <- Dimension(reader$client$GetDimension(reader$dataset$id, dim$id))
       members <- reader$GetDimMembers(dim2, splited.values)
       if (length(members) == 0) {
-        e = simpleError(sprintf('Selection for dimension %1s is empty',dim$name))
+        e = simpleError(sprintf("Selection for dimension %1s is empty",dim$name))
         stop(e)
       }
-      l <- c(request$get('stub'),PivotItem(dim$id, members))
-      request$set('stub', l)
+      l <- c(request$get("stub"),PivotItem(dim$id, members))
+      request$set("stub", l)
     }
 
     reader$EnsureAllDimenionsInFilter(filter.dims)
     if (length(time.range != 0)){
-      l <- c(request$get('header'),PivotTimeItem('Time', time.range, 'range'))
-      request$set('header', l)
+      l <- c(request$get("header"),PivotTimeItem("Time", time.range, "range"))
+      request$set("header", l)
     } else {
-      l <- c(request$get('header'),PivotTimeItem('Time', list(), 'allData'))
-      request$set('header', l)
+      l <- c(request$get("header"),PivotTimeItem("Time", list(), "allData"))
+      request$set("header", l)
     }
     return (request)
 
@@ -129,7 +129,7 @@ DataReader <- function(client, dataset, selection){
 
   reader$CreateTs <-function(series){
     result <- list()
-    frequencies.seq <- list(A = "year",H = "6 month",Q = "quarter",M = "month", W = "week",D = "day")
+    frequencies.seq <- list(A = "year", H = "6 month", Q = "quarter", M = "month", W = "week", D = "day")
     for (i in 1:length(series)) {
       title <- names(series[i])
       freq <- substring(title, 1, 1)
@@ -145,25 +145,25 @@ DataReader <- function(client, dataset, selection){
       for (j in 1:length(all.dates)) {
         if (as.Date(all.dates[j]) %in% as.Date(dates)) {
           value <- as.numeric(unlist(series[[i]])[as.character(all.dates[j])])
-          values <- c(values,value)
+          values <- c(values, value)
         } else {
-          values <- c(values,NA)
+          values <- c(values, NA)
         }
       }
       if (freq == "A")
         start.by.freq <- c(year(min.date),1)
       if (freq == "H") {
         half.year = (month(min.date)-1)%/%6+1
-        start.by.freq <- c(year(min.date),half.year)
+        start.by.freq <- c(year(min.date), half.year)
       }
       if (freq == "Q")
-        start.by.freq <- c(year(min.date),quarter(min.date))
+        start.by.freq <- c(year(min.date), quarter(min.date))
       if (freq == "M")
-        start.by.freq <- c(year(min.date),month(min.date))
+        start.by.freq <- c(year(min.date), month(min.date))
       if (freq == "W")
-        start.by.freq <- c(year(min.date),week(min.date))
+        start.by.freq <- c(year(min.date), week(min.date))
       if (freq == "D")
-        start.by.freq <- c(year(min.date),day(min.date))
+        start.by.freq <- c(year(min.date), day(min.date))
 
       result[[title]] <- ts(values, start = start.by.freq, frequency = FrequencyToInt(freq))
     }
@@ -199,7 +199,7 @@ DataReader <- function(client, dataset, selection){
       }
       freq <- substring(title, 1, 1)
       if (freq == "A")
-        dates <- as.numeric(format(as.Date(names(series[[i]])),"%Y"))
+        dates <- as.numeric(format(as.Date(names(series[[i]])), "%Y"))
       if (freq == "Q")
         dates <- as.yearqtr(as.Date(names(series[[i]])))
       if (freq == "M")
@@ -225,7 +225,7 @@ DataReader <- function(client, dataset, selection){
         # get name of time series
         for (j in 1:length(resp$stub)){
           dim <- resp$stub[[j]]$dimensionId
-          name <-  paste(name, resp$data[[i]][[dim]], sep = ' - ');
+          name <-  paste(name, resp$data[[i]][[dim]], sep = " - ");
         }
         # create key-value list where time is the key
         if (is.null(series[[name]])){

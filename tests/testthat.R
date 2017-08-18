@@ -1,5 +1,5 @@
 library(testthat)
-library(knoema)
+library(Knoema)
 library(zoo)
 
-test_check("knoema")
+test_check("Knoema")
