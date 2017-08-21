@@ -66,7 +66,8 @@ test_that("get data single series different frequencies by member id xts",{
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.ts(time_ser),FALSE)
   expect_equal(coredata(time_ser)[1], -5.0)
-  expect_equal(coredata(time_ser)[length(time_ser)], 5.1)
+  value = coredata(time_ser["2017-06-01"])[1]
+  expect_equal(value, 5.1)
 
   sname = "Q - Austria - Confidence indicators - Balance, s.a."
   time_ser = data_frame[[sname]]
