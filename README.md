@@ -21,7 +21,7 @@ There is one method for retrieving series from datasets in R: the Knoema method.
 
 The following quick call can be used to retrieve a timeserie from dataset:
 
-    library("Knoema)
+    library("Knoema")
     data = Knoema("IMFWEO2017Apr", list(country = "914", subject = "ngdp"))
    
 where:
@@ -35,11 +35,11 @@ This example finds all data points for the dataset IMFWEO2017Apr with selection 
 
 Please note that you need to identify all dimensions of the dataset, and for each dimension to indicate the selection. Otherwise, the method returns an error.
 
-For multiple selection you can use the next example::
+For multiple selection you can use the next example:
   
     data = Knoema("IMFWEO2017Apr", list("country" = "914;512;111", "subject" = "lp;ngdp"))
     
-For case when the dimensions of dataset that have multi word names use the next example::
+For case when the dimensions of dataset that have multi word names use the next example:
 
     data = Knoema("FDI_FLOW_CTRY", list("Reporting country" = "AUS",
                                                     "Partner country/territory" = "w0",
@@ -50,7 +50,7 @@ For case when the dimensions of dataset that have multi word names use the next 
                                                     "Level of counterpart" = "IMC",
                                                     "Currency" = "USD"))   
 
-In addition to the required using of the selections for dimensions, you can additionally specify the period and frequencies in the parameters. For more details, see the example below::
+In addition to the required using of the selections for dimensions, you can additionally specify the period and frequencies in the parameters. For more details, see the example below:
 
     data = Knoema("IMFWEO2017Apr",list (country = "914;512;111", subject = "lp;ngdp", frequency = "A", timerange = "2007-2017"))
     
@@ -63,13 +63,3 @@ In order to get access to private datasets please use parameters client.id and c
     data = Knoema("MEI_BTS_COS_2015", list(location = "AT;AU", subject = "BSCI", measure = "blsa", frequency = "Q;M"), type = "xts", client.id = "some client id", client.secret = "some client secret")
 
 Note: If the function returns an error 403(Forbidden), try using other parameters client.id and client.secret.
-
-# Converting timeseries in different formats
-
-  Function Knoema always return list of timeseries. If you want to convert series in format ts,xts, zoo, you should first get the separate serie::
-  
-    data = Knoema("IMFWEO2017Apr", list(country = "albania;afghanistan;united states", subject = "Gross domestic product, current     prices (National currency);population (persons)"), "ts") 
-    sname = "A - United States - Gross domestic product, current prices (National currency)"
-    time_ser = data[[sname]]
-    zoo = as.zoo(time_ser)
-
