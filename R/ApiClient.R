@@ -36,7 +36,7 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
   }
 
   client$GetAuthorization <- function(){
-    if (client$client.id != "" || client$client.secret != "") {
+    if (client$client.id != "" && client$client.secret != "") {
       key <- format(Sys.time(), "%d-%m-%y-%H", tz = "UCT")
       hash <-  hmac(key, client$client.secret, "sha1", raw = TRUE)
       secrethash <- base64encode(hash)

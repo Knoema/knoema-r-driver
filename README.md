@@ -1,4 +1,4 @@
-Official R package for Knoema's API
+Interface to the Knoema API
 ========
 
 This is the official documentation for Knoema's R Package. The package can be used for obtaining data from the datasets from the site knoema.com.
@@ -10,6 +10,14 @@ To install the [devtools](https://cran.r-project.org/package=devtools) package:
     install.packages("devtools")
     library("devtools")
     install_github("Knoema/knoema-r-driver")
+    
+# CRAN
+To install the most recent package from CRAN type:
+
+    install.packages("Knoema")
+    library("Knoema")
+    
+Note: the CRAN version migth not reflect the latest changes made to this package. If you are interested in the latest changes, use the version from the github.  
 
 # Authentication
 By default, the package allows you to work only with public datasets from the site knoema.com and has a limit on the number of requests.

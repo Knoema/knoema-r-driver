@@ -1,12 +1,12 @@
 Package: Knoema
-Title: Official R Package for Knoema's API
-Version: 0.1.4
-Date: 2017-08-18
+Title: Interface to the Knoema API
+Version: 0.1.7
+Date: 2017-08-22
 Authors@R: c(person("Pavel Pimenov", role=c("aut", "cre"), email="pimenov@knoema.com"),
     person("Ekaterina Chirkova", role="aut", email="chirkova@knoema.com"),
     person("Knoema", role="cph"))
 Maintainer: Pavel Pimenov <pimenov@knoema.com>
-Description: Functionality for interacting with Knoema API in order to get data in the following formats: ts, xts, zoo.
+Description: 'Knoema' has the largest collection of public data and statistics on the Internet featuring about 2.5 billion time series from thousands of sources. Using 'Knoema' API users can access the data in the 'Knoema' repository and use rich R calculations in order to analyze the data. Because data in 'Knoema' is time series data, 'Knoema' function offers data in a number of formats usable in R such as 'ts', 'xts' or 'zoo'. For more information about 'Knoema' API go to <https://knoema.com/dev/docs>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

@@ -52,7 +52,7 @@ DataReader <- function(client, dataset, selection){
 
 
   reader$GetDimMembers <- function(dim, split.values){
-    members <- c()
+    members <- NULL
     for (value in split.values) {
       if (is.null(value)) {
         error <- simpleError(sprintf("Selection for dimension %1s is empty",dim$name))
@@ -141,7 +141,7 @@ DataReader <- function(client, dataset, selection){
       min.date <- as.Date(min(dates))
       max.date <- as.Date(max(dates))
       all.dates <- seq(min.date,max.date, by = freq.seq)
-      values <- c()
+      values <- NULL
       for (j in 1:length(all.dates)) {
         if (as.Date(all.dates[j]) %in% as.Date(dates)) {
           value <- as.numeric(unlist(series[[i]])[as.character(all.dates[j])])
