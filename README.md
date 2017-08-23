@@ -12,7 +12,7 @@ To install the [devtools](https://cran.r-project.org/package=devtools) package:
     install_github("Knoema/knoema-r-driver")
     
 # CRAN
-To install the most recent package from CRAN type:
+To install the most recent package from CRAN:
 
     install.packages("Knoema")
     library("Knoema")
