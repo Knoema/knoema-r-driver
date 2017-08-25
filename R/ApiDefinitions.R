@@ -16,12 +16,7 @@ DimensionModel <- function (data){
 }
 
 DimensionModelList <- function (data){
-  dimension.model.list=list()
-
-  for (dim in data) {
-    dim.model <- DimensionModel(dim)
-    dimension.model.list<-c(dimension.model.list, dim.model)
-  }
+  dimension.model.list <- lapply(1:length(data),function(x) DimensionModel(data[[x]]))
   class(dimension.model.list) <- "DimensionModelList"
   return(dimension.model.list)
 }
@@ -45,11 +40,7 @@ Dimension <- function (data){
   dimension=list(
     items=list()
   )
-  for (i in 1:length(data$items)){
-    item <- data$items[i][[1]]
-    member <- DimensionMember(item)
-    dimension$items <-c (dimension$items,member)
-  }
+  dimension$items <- lapply(1:length(data$items),function(x) DimensionMember(data$items[x][[1]]))
 
   # The method searches member of dimension by given member key
   dimension$FindMemberByKey <- function(member.key){

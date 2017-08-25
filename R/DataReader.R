@@ -35,13 +35,9 @@ DataReader <- function(client, dataset, selection){
   }
   reader$EnsureAllDimenionsInFilter <- function(filter.dims){
     dims <- list()
-    for (item in reader$dataset$dimensions) {
-      dims <- c(dims,item$name)
-    }
+    dims <- lapply(1:length(reader$dataset$dimensions),function(x) reader$dataset$dimensions[[x]]$name)
     dims.from.filter <- list()
-    for (item in filter.dims) {
-      dims.from.filter <- c(dims.from.filter,item$name)
-    }
+    dims.from.filter <-lapply(1:length(filter.dims),function(x) filter.dims[[x]]$name)
     list.condition <- sapply(dims, function(x) ! x %in% dims.from.filter)
     out.of.filter.dim.names <- dims[list.condition]
     if (length (out.of.filter.dim.names) > 0) {
