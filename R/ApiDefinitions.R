@@ -38,9 +38,12 @@ DimensionMember <- function(data){
 # The class contains dimension description and dimension items
 Dimension <- function (data){
   dimension=list(
-    items=list()
+    dim.model = DimensionModel(data),
+    items=list(),
+    fields = list()
   )
   dimension$items <- lapply(1:length(data$items),function(x) DimensionMember(data$items[x][[1]]))
+  dimension$fields <- data$fields
 
   # The method searches member of dimension by given member key
   dimension$FindMemberByKey <- function(member.key){

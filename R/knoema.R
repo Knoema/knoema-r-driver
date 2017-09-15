@@ -43,6 +43,6 @@ Knoema <- function(dataset.id, selection, type="ts", host = "", client.id = "", 
     stop(error)
   }
   data.reader <- DataReader(client, dataset, selection)
-  series <- data.reader$GetFrame(type)
+  series <- data.reader$GetObjectByType(type)
   return (series)
 }
