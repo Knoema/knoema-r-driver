@@ -74,13 +74,27 @@ Dimension <- function (data){
   return(dimension)
 }
 
+# The class comtains information about timeseries attributes
+TimeSeriesAttribute <- function (data){
+  attributs = list(
+    name = data$name,
+    type = data$type,
+    allowedValues = data$allowedValues
+  )
+}
+
+
 # The class contains dataset description
 Dataset <-function (data){
   dataset = list(
     id = data$id,
-    dimensions = DimensionModelList(data$dimensions)
-  )
+    dimensions = DimensionModelList(data$dimensions),
+    time.series.attributes = list()
+   )
 
+  if (!is.null(data$timeseriesAttributes)){
+    time.series.attributes = lapply(1:length(data$timeseriesAttributes),function(x) TimeSeriesAttribute(data$timeseriesAttributes[x][[1]]))
+  }
   # The method searching dimension with a given name
   dataset$FindDimensionByName <- function (dim.name){
     for (dim in dataset$dimensions) {

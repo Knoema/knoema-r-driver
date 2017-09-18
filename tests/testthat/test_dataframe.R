@@ -22,8 +22,8 @@ test_that("get metadata frame",{
   expect_equal(data_frame[['Unit',sname]], "Persons (Millions)")
 })
 
-context ("get data frame with multi selection")
-test_that("get data frame with multi selection",{
+context ("get metadata frame with multi selection")
+test_that("get metadata frame with multi selection",{
   data_frame = Knoema('IMFWEO2017Apr', list('frequency' = 'A', 'Country' = '914;612;512', 'Subject' = 'LP;NID_NGDP'),'MetaDataFrame',client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   sname = "Algeria - Population (Persons) - A"
   expect_equal(data_frame[['Unit',sname]], "Persons (Millions)")

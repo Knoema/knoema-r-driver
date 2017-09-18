@@ -308,6 +308,9 @@ DataReader <- function(client, dataset, selection){
     names[['Unit']] <- series.point$Unit
     names[['Scale']] <- series.point$Scale
     names[['Mnemonics']] <- ifelse(is.null(series.point$Mnemonics),'NULL',series.point$Mnemonics)
+    for (attr in reader$dataset$time.series.attributes){
+        names[[attr$name]] <- series.point[[attr$name]]
+    }
     return (names)
   }
 
@@ -327,6 +330,9 @@ DataReader <- function(client, dataset, selection){
         }
       }
       data.rows <- c(data.rows,c('Unit','Scale','Mnemonics'))
+      for (attr in reader$dataset$time.series.attributes){
+        data.rows <- c(data.rows, attr$name)
+      }
 
       for (serie.point in resp$data){
         name <- NULL
@@ -368,6 +374,9 @@ DataReader <- function(client, dataset, selection){
       }
     }
     data.rows <- c(data.rows,c('Unit','Scale','Mnemonics'))
+    for (attr in reader$dataset$time.series.attributes){
+      data.rows <- c(data.rows, attr$name)
+    }
     for (serie.point in resp$data){
       if (is.null(serie.point$Value)){
         next
