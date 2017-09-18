@@ -79,6 +79,10 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
       stop(e)
     }
     res <- content(p, as = "parsed")
+    if (is.character(res)){
+      e <- simpleError(res)
+      stop(e)
+    }
     return(res)
   }
 
