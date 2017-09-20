@@ -17,6 +17,7 @@
 #' @importFrom zoo coredata
 #' @importFrom stats ts
 #' @importFrom methods is
+#' @importFrom stats ftable
 
 
 DataReader <- function(client, dataset, selection){
@@ -250,38 +251,38 @@ DataReader <- function(client, dataset, selection){
     }
   }
 
-  reader$CreateMatrixForFrameOrTable <- function(data.rows,series){
+  reader$CreateMatrixForFrameOrTable <- function(data.rows, series){
     list.for.matrix <- NULL
     for (name.serie in names(series)){
       for (date in data.rows){
         if (date %in% names(series[[name.serie]])){
-          list.for.matrix <-c(list.for.matrix,series[[name.serie]][[date]])
-        }else{
-          list.for.matrix <-c(list.for.matrix, NA)
+          list.for.matrix <- c(list.for.matrix, series[[name.serie]][[date]])
+        } else {
+          list.for.matrix <- c(list.for.matrix, NA)
         }
       }
     }
-    matrix <- matrix(list.for.matrix,nrow=length(data.rows),ncol=length(series))
+    matrix <- matrix(list.for.matrix, nrow = length(data.rows), ncol = length(series))
     return (matrix)
   }
 
   reader$GetFTableByData <- function (data.rows, data.columns, series, row.equal.dates = TRUE){
-    matrix <- reader$CreateMatrixForFrameOrTable(data.rows,series)
-    length.by.columns <- unlist(lapply(1:length(data.columns),function(x) length(data.columns[[x]])), recursive = F)
+    matrix <- reader$CreateMatrixForFrameOrTable(data.rows, series)
+    length.by.columns <- unlist(lapply(1:length(data.columns), function(x) length(data.columns[[x]])), recursive = F)
     length.of.all.dimension <- c(length(data.rows), length.by.columns)
     matrix.arr <- array(matrix, length.of.all.dimension)
-    if (row.equal.dates == TRUE){
-      dimnames(matrix.arr) <- c(list(date=data.rows), data.columns)
-    }else{
-      dimnames(matrix.arr) <- c(list(attributes=data.rows), data.columns)
+    if (row.equal.dates){
+      dimnames(matrix.arr) <- c(list(date = data.rows), data.columns)
+    } else {
+      dimnames(matrix.arr) <- c(list(attributes = data.rows), data.columns)
     }
-    data.table <- ftable(matrix.arr, row.vars=1, col.vars=2:(length(data.columns)+1))
+    data.table <- ftable(matrix.arr, row.vars = 1, col.vars = 2:(length(data.columns) + 1))
     return (data.table)
   }
 
   reader$GetDataFrameByData <- function(data.rows, series){
-    matrix <- reader$CreateMatrixForFrameOrTable(data.rows,series)
-    data.frame <- as.data.frame(matrix, row.names=data.rows,stringsAsFactors = FALSE)
+    matrix <- reader$CreateMatrixForFrameOrTable(data.rows, series)
+    data.frame <- as.data.frame(matrix, row.names = data.rows, stringsAsFactors = FALSE)
     colnames(data.frame) <- names(series)
     return (data.frame)
   }
@@ -298,8 +299,8 @@ DataReader <- function(client, dataset, selection){
       for (attr in dim$fields){
         if (attr$isSystemField == FALSE){
           for (i in 1: length(dim.attr)){
-            if (IsEqualStringsIgnoreCase(names(dim.attr[i]),attr$name)){
-              names[[paste(dim$dim.model$name,attr$displayName, sep=' ')]] <- dim.attr[[i]]
+            if (IsEqualStringsIgnoreCase(names(dim.attr[i]), attr$name)){
+              names[[paste(dim$dim.model$name, attr$displayName, sep=' ')]] <- dim.attr[[i]]
             }
           }
         }
@@ -307,76 +308,66 @@ DataReader <- function(client, dataset, selection){
     }
     names[['Unit']] <- series.point$Unit
     names[['Scale']] <- series.point$Scale
-    names[['Mnemonics']] <- ifelse(is.null(series.point$Mnemonics),'NULL',series.point$Mnemonics)
+    names[['Mnemonics']] <- ifelse(is.null(series.point$Mnemonics), 'NULL', series.point$Mnemonics)
     for (attr in reader$dataset$time.series.attributes){
         names[[attr$name]] <- series.point[[attr$name]]
     }
     return (names)
   }
 
-  reader$CreateMetaDataTable <- function(resp){
-    series <- list()
+  reader$CreateAttributesNamesForMetadata <- function(){
     data.rows <- NULL
-    data.columns <- list()
-    if (length(resp$data) == 0){
-      warning(simpleError("Dataset do not have data by this selection"))
-      return (NULL)
-    } else {
-      for (dim in reader$dimensions){
-        for (attr in dim$fields){
-          if (attr$isSystemField == FALSE){
-            data.rows <- c(data.rows, paste(dim$dim.model$name, attr$displayName, sep=' '))
-          }
-        }
-      }
-      data.rows <- c(data.rows,c('Unit','Scale','Mnemonics'))
-      for (attr in reader$dataset$time.series.attributes){
-        data.rows <- c(data.rows, attr$name)
-      }
-
-      for (serie.point in resp$data){
-        name <- NULL
-        name.meta <- list()
-        # get name of time series
-        for (j in 1:length(resp$stub)){
-          dim <- resp$stub[[j]]$dimensionId
-          dim.name <- reader$FindDimension(dim)$name
-          name.element = serie.point[[dim]]
-          if (!name.element %in% data.columns[[dim.name]]){
-            data.columns[[dim.name]] <- c(data.columns[[dim.name]],  name.element)
-          }
-          name <- ifelse(is.null(name),name.element,paste(name, name.element, sep = " - "))
-        }
-        frequency <- serie.point$Frequency
-        name <- paste(name, frequency, sep = " - ")
-        name.meta <- reader$GetSeriesNameWithMetadata(serie.point)
-        if (!frequency %in% data.columns[['Frequency']]){
-          data.columns[['Frequency']] <- c(data.columns[['Frequency']],frequency)
-        }
-        # create key-value list where time is the key
-        if (is.null(series[[name]])){
-          series[[name]] <-  name.meta
+    for (dim in reader$dimensions){
+      for (attr in dim$fields){
+        if (attr$isSystemField == FALSE){
+          data.rows <- c(data.rows, paste(dim$dim.model$name, attr$displayName, sep = ' '))
         }
       }
     }
+    data.rows <- c(data.rows, c('Unit', 'Scale', 'Mnemonics'))
+    for (attr in reader$dataset$time.series.attributes){
+      data.rows <- c(data.rows, attr$name)
+    }
+    return(data.rows)
+  }
+
+  reader$CreateMetaDataTable <- function(resp){
+    series <- list()
+    data.rows <- reader$CreateAttributesNamesForMetadata()
+    data.columns <- list()
+
+    for (serie.point in resp$data){
+      name <- NULL
+      name.meta <- list()
+      # get name of time series
+      for (j in 1:length(resp$stub)){
+        dim <- resp$stub[[j]]$dimensionId
+        dim.name <- reader$FindDimension(dim)$name
+        name.element = serie.point[[dim]]
+        if (!name.element %in% data.columns[[dim.name]]){
+          data.columns[[dim.name]] <- c(data.columns[[dim.name]], name.element)
+        }
+        name <- ifelse(is.null(name), name.element, paste(name, name.element, sep = " - "))
+      }
+      frequency <- serie.point$Frequency
+      name <- paste(name, frequency, sep = " - ")
+      name.meta <- reader$GetSeriesNameWithMetadata(serie.point)
+      if (!frequency %in% data.columns[['Frequency']]){
+        data.columns[['Frequency']] <- c(data.columns[['Frequency']],frequency)
+      }
+      # create key-value list where time is the key
+      if (is.null(series[[name]])){
+        series[[name]] <-  name.meta
+      }
+    }
+
     data.table <- reader$GetFTableByData(data.rows, data.columns, series, FALSE)
     return (data.table)
   }
 
   reader$CreateMetaDataFrame <- function(resp){
     series <- list()
-    data.rows <- NULL
-    for (dim in reader$dimensions){
-      for (attr in dim$fields){
-        if (attr$isSystemField == FALSE){
-          data.rows <- c(data.rows, paste(dim$dim.model$name, attr$displayName, sep=' '))
-        }
-      }
-    }
-    data.rows <- c(data.rows,c('Unit','Scale','Mnemonics'))
-    for (attr in reader$dataset$time.series.attributes){
-      data.rows <- c(data.rows, attr$name)
-    }
+    data.rows <- reader$CreateAttributesNamesForMetadata()
     for (serie.point in resp$data){
       if (is.null(serie.point$Value)){
         next
@@ -387,7 +378,7 @@ DataReader <- function(client, dataset, selection){
       for (j in 1:length(resp$stub)){
         dim <- resp$stub[[j]]$dimensionId
         name.element = serie.point[[dim]]
-        name <- ifelse(is.null(name),name.element,paste(name, name.element, sep = " - "))
+        name <- ifelse(is.null(name), name.element, paste(name, name.element, sep = " - "))
       }
       frequency <- serie.point$Frequency
       name <- paste(name, frequency, sep = " - ")
@@ -413,14 +404,14 @@ DataReader <- function(client, dataset, selection){
         dim.name <- reader$FindDimension(dim)$name
         name.element = serie.point[[dim]]
         if (!name.element %in% data.columns[[dim.name]]){
-          data.columns[[dim.name]] <- c(data.columns[[dim.name]],  name.element)
+          data.columns[[dim.name]] <- c(data.columns[[dim.name]], name.element)
         }
-        name <- ifelse(is.null(name),name.element,paste(name, name.element, sep = " - "))
+        name <- ifelse(is.null(name), name.element, paste(name, name.element, sep = " - "))
       }
       frequency <- serie.point$Frequency
       name <- paste(name, frequency, sep = " - ")
       if (!frequency %in% data.columns[['Frequency']]){
-        data.columns[['Frequency']] <- c(data.columns[['Frequency']],frequency)
+        data.columns[['Frequency']] <- c(data.columns[['Frequency']], frequency)
       }
       # create key-value list where time is the key
       if (is.null(series[[name]])){
@@ -449,7 +440,7 @@ DataReader <- function(client, dataset, selection){
       for (stub in resp$stub){
         dim <- stub$dimensionId
         name.element = serie.point[[dim]]
-        name <- ifelse(is.null(name),name.element,paste(name, name.element, sep = " - "))
+        name <- ifelse(is.null(name), name.element, paste(name, name.element, sep = " - "))
       }
       frequency <- serie.point$Frequency
       name <- paste(name, frequency, sep = " - ")
