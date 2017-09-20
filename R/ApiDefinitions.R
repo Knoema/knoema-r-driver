@@ -74,9 +74,9 @@ Dimension <- function (data){
   return(dimension)
 }
 
-# The class contains information about timeseries attributes
+# The class comtains information about timeseries attributes
 TimeSeriesAttribute <- function (data){
-  attribute = list(
+  attributs = list(
     name = data$name,
     type = data$type,
     allowedValues = data$allowedValues

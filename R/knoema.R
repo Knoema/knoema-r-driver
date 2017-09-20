@@ -22,18 +22,6 @@
 #' Knoema("IMFWEO2017Apr", list(country = "512;914", subject = "NGDP_RPCH", timerange = "2010-2015"),
 #'            client.id = "bHcV5UkOVyKcBw",
 #'            client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
-#' Knoema("IMFWEO2017Apr", list(country = "512;914", subject = "NGDP_RPCH"), type='DataFrame',
-#'            client.id = "bHcV5UkOVyKcBw",
-#'            client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
-#' Knoema("IMFWEO2017Apr", list(country = "512;914", subject = "NGDP_RPCH"), type='MetaDataFrame',
-#'            client.id = "bHcV5UkOVyKcBw",
-#'            client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
-#' Knoema("IMFWEO2017Apr", list(country = "512;914", subject = "NGDP_RPCH"), type='DataTable',
-#'            client.id = "bHcV5UkOVyKcBw",
-#'            client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
-#' Knoema("IMFWEO2017Apr", list(country = "512;914", subject = "NGDP_RPCH"), type='MetaDataTable',
-#'            client.id = "bHcV5UkOVyKcBw",
-#'            client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
 #' @export
 
 Knoema <- function(dataset.id, selection, type="ts", host = "", client.id = "", client.secret = "")
