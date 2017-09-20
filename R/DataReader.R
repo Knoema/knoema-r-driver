@@ -297,7 +297,7 @@ DataReader <- function(client, dataset, selection){
         }
       }
       for (attr in dim$fields){
-        if (attr$isSystemField == FALSE){
+        if (!attr$isSystemField){
           for (i in 1: length(dim.attr)){
             if (IsEqualStringsIgnoreCase(names(dim.attr[i]), attr$name)){
               names[[paste(dim$dim.model$name, attr$displayName, sep=' ')]] <- dim.attr[[i]]
@@ -319,7 +319,7 @@ DataReader <- function(client, dataset, selection){
     data.rows <- NULL
     for (dim in reader$dimensions){
       for (attr in dim$fields){
-        if (attr$isSystemField == FALSE){
+        if (!attr$isSystemField){
           data.rows <- c(data.rows, paste(dim$dim.model$name, attr$displayName, sep = ' '))
         }
       }
