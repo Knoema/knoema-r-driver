@@ -92,7 +92,7 @@ Dataset <-function (data){
     time.series.attributes = list()
    )
 
-if (!is.null(data$timeseriesAttributes)){
+if (!is.null(data$timeseriesAttributes) && length(data$timeseriesAttributes)!=0){
     dataset$time.series.attributes = lapply(1:length(data$timeseriesAttributes),function(x) TimeSeriesAttribute(data$timeseriesAttributes[x][[1]]))
   }
   # The method searching dimension with a given name
