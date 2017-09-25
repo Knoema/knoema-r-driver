@@ -70,4 +70,71 @@ In order to get access to private datasets please use parameters client.id and c
 
     data = Knoema("MEI_BTS_COS_2015", list(location = "AT;AU", subject = "BSCI", measure = "blsa", frequency = "Q;M"), type = "xts", client.id = "some client id", client.secret = "some client secret")
 
-Note: If the function returns an error 403(Forbidden), try using other parameters client.id and client.secret.
+# Possible errors in Knoema package and how to avoid them
+1.  Error: “Client error: (403) Forbidden”
+This error appears in next cases:
+1.1. when you use public user (without client.id and client.secret parameters set) and reached the limit of requests.
+1.2  when you use client.id and client.secret parameters set, and reached the limit of requests.
+1.3  when you use client.id and client.secret, but they are incorrect.
+
+You can avoid these errors, using correct parameters client.id and client.secret
+
+2.  Error: “dataset.id should be a string. Can't be NULL”
+    Error: “dataset.id should be a string. Can't be double”
+These errors appear when you use NULL or number  instead dataset's Id.
+Examples:
+
+    Knoema(NULL)
+    Knoema(123)
+
+3. argument "selection" is missing, with no default
+This error appears when you set dataset.id, but did not set selection
+Example:
+
+    Knoema(‘IMFWEO2017Apr’)
+
+4. Error: “Dimension with id or name *some_name_of_dimension* is not found"
+This error appears when you use name that doesn't correspond to any existing dimensions' names or ids.
+Example:
+
+    Knoema('IMFWEO2017Apr', list(dimension_not_exist='914', subject='lp')
+
+5.  Error:  The following dimension(s) are not set: *list of dimensions name*"
+This error appears when you don't set some dimensions.
+Example:
+
+    Knoema('IMFWEO2017Apr', list(subject='lp'))
+
+6. Error: "Selection for dimension *dimension_name* is empty"
+This error appears when you use empty selection for dimension or all specified elements don't exist.
+Examples:
+
+    Knoema('IMFWEO2017Apr', list(country ='', subject='lp'))
+    Knoema('IMFWEO2017Apr', list('country'='914', 'subject'='nonexistent_element1; nonexistent_element2'))
+
+7. Error: “The following frequencies are not correct: *list of frequencies*”
+This error appears when you use frequencies that don't correspond to supported formats.
+Example:
+
+    Knoema("IMFWEO2017Apr", list(country = "914", subject = "LP", frequency = "A;nonexistent_frequency”))
+    
+We support only next abbreviations of frequencies - A, H, Q, M, W, D.
+
+8. Error: "Requested dataset doesn't exist or you don't have access to it"
+This error appears when you use dataset that doesn't exist or you don't have access rights to it.
+Example:
+
+    Knoema("IMFWEO2017Apr1", list(country = "914", subject = "LP"))
+    
+This dataset doesn't exist. If your dataset exist, and you have access to it, check that you set client.id and client.secret parameters
+
+9. Error: "Underlying data is very large. Can't create visualization"
+This error appears when you use a big selection. Try to decrease the selection.
+
+10. Error: "The specified host *incorect_host* doesn't exist"
+This error can appear when you use host that doesn't exist.
+Example:
+
+     Knoema("IMFWEO2017Apr1", list(country = "914", subject = "LP"), host='knoema_incorect.com')
+
+

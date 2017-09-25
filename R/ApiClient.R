@@ -46,6 +46,16 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
     return (NULL)
   }
 
+  client$CheckCorrectHost <- function(){
+    if (client$host == 'knoema.com')
+      return (NULL)
+    url = client$GetUrl('/api/1.0/frontend/tags')
+    out <- tryCatch(GET(x, add_headers("Content-Type"="application/json")),
+                    error = function(e)
+                     stop(simpleError(sprintf("The specified host %1s does not exists", client$host))))
+    return (out)
+  }
+
   client$ApiGet <- function(apipath, query = NULL){
     url <- client$GetUrl(apipath)
     if (!is.null(query)) {
@@ -78,8 +88,8 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
       e <- simpleError(http_status(p)$message)
       stop(e)
     }
-    res <- content(p, as = "parsed")
-    if (is.character(res)){
+    res <- content(p, as = "parsed")  
+      if (is.character(res)){
       e <- simpleError(res)
       stop(e)
     }

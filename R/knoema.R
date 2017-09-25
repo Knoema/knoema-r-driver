@@ -45,6 +45,7 @@ Knoema <- function(dataset.id, selection, type="ts", host = "", client.id = "", 
       host = Sys.getenv("KNOEMA_HOST")
     }
   client = ApiClient(host, client.id, client.secret)
+  client$CheckCorrectHost()
   if (!is.character(dataset.id)){
     e = simpleError(sprintf("dataset.id should be a string. Can't be %1s",typeof(dataset.id)))
     stop(e)
