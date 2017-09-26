@@ -61,5 +61,5 @@ test_that("test incorect frequencies error",{
 context("test incorect host error")
 test_that("test incorect host error",{
   expect_error(Knoema("IMFWEO2017Apr", list(country = "914;512;111", subject = "LP;NGDP", frequency = "A"), host = 'knoema_incorect.com', client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
-               , "The specified host knoema_incorect.com does not exists", fixed = TRUE)
+               , "The specified host knoema_incorect.com does not exist", fixed = TRUE)
 })

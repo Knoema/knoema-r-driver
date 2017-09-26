@@ -52,7 +52,7 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
     url = client$GetUrl('api/1.0/frontend/tags')
     out <- tryCatch(GET(url, add_headers("Content-Type"="application/json")),
                     error = function(e)
-                     stop(simpleError(sprintf("The specified host %1s does not exists", client$host))))
+                     stop(simpleError(sprintf("The specified host %1s does not exist", client$host))))
     return (out)
   }
 
