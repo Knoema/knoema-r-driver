@@ -72,7 +72,7 @@ In order to get access to private datasets please use parameters client.id and c
 
 # Possible errors in Knoema package and how to avoid them
 1.  Error: “Client error: (403) Forbidden”
-This error appears in next cases:
+This error appears in the following cases:
 1.1. when you use public user (without client.id and client.secret parameters set) and reached the limit of requests.
 1.2  when you use client.id and client.secret parameters set, and reached the limit of requests.
 1.3  when you use client.id and client.secret, but they are incorrect.
@@ -81,25 +81,25 @@ You can avoid these errors, using correct parameters client.id and client.secret
 
 2.  Error: “dataset.id should be a string. Can't be NULL”
     Error: “dataset.id should be a string. Can't be double”
-These errors appear when you use NULL or number  instead dataset's Id.
+These errors appear when you use NULL or number in place of dataset's Id parameter.
 Examples:
 
     Knoema(NULL)
     Knoema(123)
 
 3. argument "selection" is missing, with no default
-This error appears when you set dataset.id, but did not set selection
+This error appears when you set dataset.id, but did not set selection.
 Example:
 
-    Knoema(‘IMFWEO2017Apr’)
+    Knoema('IMFWEO2017Apr')
 
-4. Error: “Dimension with id or name *some_name_of_dimension* is not found"
+4. Error: "Dimension with id or name *some_name_of_dimension* is not found"
 This error appears when you use name that doesn't correspond to any existing dimensions' names or ids.
 Example:
 
     Knoema('IMFWEO2017Apr', list(dimension_not_exist='914', subject='lp')
 
-5.  Error:  The following dimension(s) are not set: *list of dimensions name*"
+5.  Error:  The following dimension(s) are not set: *list of dimensions names*"
 This error appears when you don't set some dimensions.
 Example:
 
@@ -118,7 +118,7 @@ Example:
 
     Knoema("IMFWEO2017Apr", list(country = "914", subject = "LP", frequency = "A;nonexistent_frequency”))
     
-We support only next abbreviations of frequencies - A, H, Q, M, W, D.
+We support only following abbreviations of frequencies - A, H, Q, M, W, D.
 
 8. Error: "Requested dataset doesn't exist or you don't have access to it"
 This error appears when you use dataset that doesn't exist or you don't have access rights to it.
@@ -129,7 +129,7 @@ Example:
 This dataset doesn't exist. If your dataset exist, and you have access to it, check that you set client.id and client.secret parameters
 
 9. Error: "Underlying data is very large. Can't create visualization"
-This error appears when you use a big selection. Try to decrease the selection.
+This error appears when you use a big selection. Try to reduce the selection.
 
 10. Error: "The specified host *incorect_host* doesn't exist"
 This error can appear when you use host that doesn't exist.
