@@ -71,7 +71,7 @@ In order to get access to private datasets please use parameters client.id and c
     data = Knoema("MEI_BTS_COS_2015", list(location = "AT;AU", subject = "BSCI", measure = "blsa", frequency = "Q;M"), type = "xts", client.id = "some client id", client.secret = "some client secret")
 
 # Possible errors in Knoema package and how to avoid them
-1.  Error: “Client error: (403) Forbidden”
+1.  Error: "Client error: (403) Forbidden"
 This error appears in the following cases:
 1.1. when you use public user (without client.id and client.secret parameters set) and reached the limit of requests.
 1.2  when you use client.id and client.secret parameters set, and reached the limit of requests.
@@ -79,8 +79,8 @@ This error appears in the following cases:
 
 You can avoid these errors, using correct parameters client.id and client.secret
 
-2.  Error: “dataset.id should be a string. Can't be NULL”
-    Error: “dataset.id should be a string. Can't be double”
+2.  Error: "dataset.id should be a string. Can't be NULL"
+    Error: "dataset.id should be a string. Can't be double"
 These errors appear when you use NULL or number in place of dataset's Id parameter.
 Examples:
 
@@ -112,11 +112,11 @@ Examples:
     Knoema('IMFWEO2017Apr', list(country ='', subject='lp'))
     Knoema('IMFWEO2017Apr', list('country'='914', 'subject'='nonexistent_element1; nonexistent_element2'))
 
-7. Error: “The following frequencies are not correct: *list of frequencies*”
+7. Error: "The following frequencies are not correct: *list of frequencies*"
 This error appears when you use frequencies that don't correspond to supported formats.
 Example:
 
-    Knoema("IMFWEO2017Apr", list(country = "914", subject = "LP", frequency = "A;nonexistent_frequency”))
+    Knoema("IMFWEO2017Apr", list(country = "914", subject = "LP", frequency = "A;nonexistent_frequency"))
     
 We support only following abbreviations of frequencies - A, H, Q, M, W, D.
 
