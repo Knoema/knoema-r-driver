@@ -60,7 +60,7 @@ test_that("get data single series different frequencies by member id xts",{
   data_frame = Knoema("MEI_BTS_COS_2015", list(location = "AT", subject = "BSCI", measure = "blsa"), type="xts", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
-  sname = "M - Austria - Confidence indicators - Balance, s.a."
+  sname = "M - Austria - Confidence indicators - Balance; Seasonally adjusted"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),TRUE)
@@ -69,7 +69,7 @@ test_that("get data single series different frequencies by member id xts",{
   value = coredata(time_ser["2017-06-01"])[1]
   expect_equal(value, 5.1)
 
-  sname = "Q - Austria - Confidence indicators - Balance, s.a."
+  sname = "Q - Austria - Confidence indicators - Balance; Seasonally adjusted"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),TRUE)
@@ -85,7 +85,7 @@ test_that("get data multi series single frequency by member id zoo",{
   data_frame = Knoema("MEI_BTS_COS_2015", list(location = "AT;AU", subject = "BSCI", measure = "blsa", frequency = "Q"), type = "zoo", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
-  sname = "Q - Austria - Confidence indicators - Balance, s.a."
+  sname = "Q - Austria - Confidence indicators - Balance; Seasonally adjusted"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),FALSE)
   expect_equal(is.zoo(time_ser),TRUE)
@@ -99,7 +99,7 @@ test_that("get data multi series multi frequency by member id xts",{
   data_frame = Knoema("MEI_BTS_COS_2015", list(location = "AT;AU", subject = "BSCI", measure = "blsa", frequency = "Q;M"), type = "xts", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),3)
 
-  sname = "M - Austria - Confidence indicators - Balance, s.a."
+  sname = "M - Austria - Confidence indicators - Balance; Seasonally adjusted"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),TRUE)
@@ -113,7 +113,7 @@ test_that("get data multi series multi frequency by member id range zoo",{
   data_frame = Knoema("MEI_BTS_COS_2015", list(location = "AT;BE", subject = "BSCI", measure = "blsa", frequency = "Q;M", timerange = "2010M1-2015M11"), type = "zoo", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),3)
 
-  sname = "M - Austria - Confidence indicators - Balance, s.a."
+  sname = "M - Austria - Confidence indicators - Balance; Seasonally adjusted"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),FALSE)
   expect_equal(is.zoo(time_ser),TRUE)
