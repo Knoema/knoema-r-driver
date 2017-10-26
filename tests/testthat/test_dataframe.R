@@ -31,3 +31,26 @@ test_that("get metadata frame with multi selection",{
   expect_equal(data_frame[['Subject SubjectNotes',sname]], "Expressed as a ratio of total investment in current local currency and GDP in current local currency. Investment or gross capital formation is measured by the total value of the gross fixed capital formation and changes in inventories and acquisitions less disposals of valuables for a unit or sector. [SNA 1993]")
   expect_equal(data_frame[['Unit',sname]], "Percent of GDP")
 })
+
+context ("get series from dataset by partial selection dataframe")
+test_that("get series from dataset by partial selection",{
+  data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),"DataFrame", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  expect_equal(length(data_frame),2)
+  sname = "Six-month London interbank offered rate (LIBOR) (Percent) - Japan - A"
+  expect_equal(data_frame[['2012-01-01',sname]], 0.325)
+  sname ="Six-month London interbank offered rate (LIBOR) (Percent) - United States - A"
+  expect_equal(data_frame[['2007-01-01',sname]], 5.252)
+})
+
+context ("get series from dataset by partial selection Metadataframe")
+test_that("get series from dataset by partial selection",{
+  data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),"MetaDataFrame", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  expect_equal(length(data_frame),2)
+  sname = "Six-month London interbank offered rate (LIBOR) (Percent) - Japan - A"
+  expect_equal(data_frame[['Unit',sname]], "Percent")
+  expect_equal(data_frame[['Subject SubjectDescription',sname]], "Six-month London interbank offered rate (LIBOR)")
+  sname ="Six-month London interbank offered rate (LIBOR) (Percent) - United States - A"
+  expect_equal(data_frame[['Country Id',sname]], "111")
+  expect_equal(data_frame[['Mnemonics',sname]], "NULL")
+})
+

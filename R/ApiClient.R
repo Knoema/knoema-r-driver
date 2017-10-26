@@ -114,6 +114,11 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
     return (client$ApiPost(path, pivot.request))
   }
 
+  client$GetMnemonics <- function(mnemonics){
+    path <- "api/1.0/data/mnemonics?mnemonics=%1s"
+    return (client$ApiGet(sprintf(path, mnemonics)))
+  }
+
   client <- list2env(client)
   class(client) <- "ApiClient"
   return(client)

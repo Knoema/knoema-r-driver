@@ -181,3 +181,17 @@ test_that("get data from dataset by dim ids ts",{
   expect_equal(time_ser[length(time_ser)], 22267.638, tolerance=0.001)
 })
 
+context ("get series from dataset by partial selection ts")
+test_that("get series from dataset by partial selection ts",{
+ data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+ expect_equal(length(data_frame),2)
+
+ sname = "A - Six-month London interbank offered rate (LIBOR) (Percent) - Japan"
+
+ time_ser = data_frame[[sname]]
+ expect_equal(is.ts(time_ser),TRUE)
+ expect_equal(is.zoo(time_ser),FALSE)
+ expect_equal(is.xts(time_ser),FALSE)
+ expect_equal(time_ser[1], 10.861)
+ expect_equal(time_ser[39], 0.048)
+})

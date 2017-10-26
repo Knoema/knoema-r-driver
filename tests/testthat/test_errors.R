@@ -40,26 +40,20 @@ test_that("test incorrect client.id and client.secret error",{
   expect_error(Knoema("IMFWEO2017Apr", list(country = "914;512;111", subject = "LP;NGDP"), client.id = "b", client.secret = "s"),"Client error: (403) Forbidden", fixed = TRUE)
 })
 
-context("test not all dims in filter error")
-test_that("test not all dims in filter error", {
-  expect_error(Knoema("bmlaaaf", list("Country"= "Albania",
-                                          "Borrower" = 'Ministry of Finance',
-                                          "Guarantor"= "Albania",
-                                          "Loan type"= "B loan",
-                                          "Loan status"= "EFFECTIVE"),
-                          client.id = "bHcV5UkOVyKcBw",
-                          client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU"),
-"The following dimension(s) are not set: Currency of Commitment,Measure", fixed=TRUE)
-})
-
-context("test incorect frequencies error")
-test_that("test incorect frequencies error",{
+context("test incorrect frequencies error")
+test_that("test incorrect frequencies error",{
   expect_error(Knoema("IMFWEO2017Apr", list(country = "914;512;111", subject = "LP;NGDP", frequency = "A;G;R"), client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
                , "The following frequencies are not correct: G,R", fixed = TRUE)
 })
 
-context("test incorect host error")
-test_that("test incorect host error",{
-  expect_error(Knoema("IMFWEO2017Apr", list(country = "914;512;111", subject = "LP;NGDP", frequency = "A"), host = 'knoema_incorect.com', client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
-               , "The specified host knoema_incorect.com does not exist", fixed = TRUE)
+context("test incorrect host error")
+test_that("test incorrect host error",{
+  expect_error(Knoema("IMFWEO2017Apr", list(country = "914;512;111", subject = "LP;NGDP", frequency = "A"), host = 'knoema_incorrect.com', client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
+               , "The specified host knoema_incorrect.com does not exist", fixed = TRUE)
+})
+
+context("test unknown type error")
+test_that("test unknown type error",{
+  expect_error(Knoema("IMFWEO2017Apr", list(country = "914;512;111", subject = "LP;NGDP", frequency = "A"), type = "incorrect_type", host = 'knoema.com', client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
+               , "Unknown type incorrect_type", fixed = TRUE)
 })

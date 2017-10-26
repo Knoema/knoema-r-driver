@@ -35,19 +35,6 @@ DataReader <- function(client, dataset, selection){
     }
     return (dim)
   }
-  reader$EnsureAllDimenionsInFilter <- function(filter.dims){
-    dims <- list()
-    dims <- lapply(1:length(reader$dataset$dimensions),function(x) reader$dataset$dimensions[[x]]$name)
-    dims.from.filter <- list()
-    dims.from.filter <-lapply(1:length(filter.dims),function(x) filter.dims[[x]]$name)
-    list.condition <- sapply(dims, function(x) ! x %in% dims.from.filter)
-    out.of.filter.dim.names <- dims[list.condition]
-    if (length (out.of.filter.dim.names) > 0) {
-      error <- simpleError(sprintf("The following dimension(s) are not set: %1s",paste(out.of.filter.dim.names,sep="", collapse =",")))
-      stop(error)
-    }
-  }
-
 
   reader$GetDimMembers <- function(dim, split.values){
     members <- NULL
@@ -118,7 +105,7 @@ DataReader <- function(client, dataset, selection){
       request$set("stub", l)
     }
 
-    reader$EnsureAllDimenionsInFilter(filter.dims)
+    reader$AddFullSelectionByEmptyDimValues(filter.dims, request)
     if (length(time.range != 0)){
       l <- c(request$get("header"),PivotTimeItem("Time", time.range, "range"))
       request$set("header", l)
@@ -128,6 +115,21 @@ DataReader <- function(client, dataset, selection){
     }
     return (request)
 
+  }
+
+  reader$AddFullSelectionByEmptyDimValues <- function(filter.dims, request)
+  {
+    dims <- list()
+    dims <- lapply(1:length(reader$dataset$dimensions),function(x) reader$dataset$dimensions[[x]]$id)
+    dims.from.filter <- list()
+    dims.from.filter <- lapply(1:length(filter.dims),function(x) filter.dims[[x]]$id)
+    list.condition <- sapply(dims, function(x) ! x %in% dims.from.filter)
+    out.of.filter.dim.names <- dims[list.condition]
+    for (id in out.of.filter.dim.names)
+    {
+      l <- c(request$get("stub"),PivotItem(id, list()))
+      request$set("stub", l)
+    }
   }
 
 
@@ -216,31 +218,36 @@ DataReader <- function(client, dataset, selection){
     return (result)
   }
 
+  reader$CreateSeriesForTsXtsZoo <- function (resp, series)
+  {
+    for (serie.point in resp$data){
+      if (is.null(serie.point$Value)){
+        next
+      }
+      frequency <- serie.point$Frequency
+      name <- frequency
+      # get name of time series
+      for (stub in resp$stub){
+        dim <- stub$dimensionId
+        name <-  paste(name, serie.point[[dim]], sep = " - ")
+      }
+      # create key-value list where time is the key
+      if (is.null(series[[name]])){
+        series[[name]] <- list()
+      }
+      time <- format(as.Date(serie.point$Time), "%Y-%m-%d")
+      series[[name]][time] <- serie.point$Value
+    }
+    return (series)
+  }
+
 
   reader$GetSeries <- function (resp, type){
-    series <- list()
     if (length(resp$data) == 0){
       warning(simpleError("Dataset do not have data by this selection"))
       return (series)
     } else {
-      for (serie.point in resp$data){
-        if (is.null(serie.point$Value)){
-          next
-        }
-        frequency <- serie.point$Frequency
-        name <- frequency
-        # get name of time series
-        for (stub in resp$stub){
-          dim <- stub$dimensionId
-          name <-  paste(name, serie.point[[dim]], sep = " - ")
-        }
-        # create key-value list where time is the key
-        if (is.null(series[[name]])){
-          series[[name]] <- list()
-        }
-        time <- format(as.Date(serie.point$Time), "%Y-%m-%d")
-        series[[name]][time] <- serie.point$Value
-      }
+      series <- reader$CreateSeriesForTS(resp, list())
       if (type == "zoo")
         result <- reader$CreateZoo(series)
       if (type == "xts")
@@ -331,11 +338,7 @@ DataReader <- function(client, dataset, selection){
     return(data.rows)
   }
 
-  reader$CreateMetaDataTable <- function(resp){
-    series <- list()
-    data.rows <- reader$CreateAttributesNamesForMetadata()
-    data.columns <- list()
-
+  reader$CreateSeriesForMetaDataTable <- function(resp, series, data.columns){
     for (serie.point in resp$data){
       name <- NULL
       name.meta <- list()
@@ -360,14 +363,20 @@ DataReader <- function(client, dataset, selection){
         series[[name]] <-  name.meta
       }
     }
+    return (list(series, data.columns))
+  }
 
+  reader$CreateMetaDataTable <- function(resp){
+    data.rows <- reader$CreateAttributesNamesForMetadata()
+    result <- reader$CreateSeriesForMetaDataTable(resp, list(), list())
+    series <- result [[1]]
+    data.columns <-result[[2]]
     data.table <- reader$GetFTableByData(data.rows, data.columns, series, FALSE)
     return (data.table)
   }
 
-  reader$CreateMetaDataFrame <- function(resp){
-    series <- list()
-    data.rows <- reader$CreateAttributesNamesForMetadata()
+  reader$CreateSeriesForMetaDataFrame <- function (resp, series)
+  {
     for (serie.point in resp$data){
       if (is.null(serie.point$Value)){
         next
@@ -388,14 +397,18 @@ DataReader <- function(client, dataset, selection){
         series[[name]] <-  name.meta
       }
     }
+    return (series)
+  }
+
+  reader$CreateMetaDataFrame <- function(resp){
+    data.rows <- reader$CreateAttributesNamesForMetadata()
+    series <- reader$CreateSeriesForMetaDataFrame (resp, list())[[1]]
     data.table <- reader$GetDataFrameByData(data.rows, series)
     return (data.table)
   }
 
-  reader$CreateDataTable <- function(resp){
-    series <- list()
-    data.rows <- NULL
-    data.columns <- list()
+  reader$CreateSeriesForDataTable <- function (resp, series, data.rows, data.columns)
+  {
     for (serie.point in resp$data){
       name <- NULL
       # create columns with dimension names for frable object
@@ -423,14 +436,22 @@ DataReader <- function(client, dataset, selection){
       }
       series[[name]][time] <- serie.point$Value
     }
+    return (list(series, data.rows, data.columns))
+  }
+
+
+  reader$CreateDataTable <- function(resp){
+    result <- reader$CreateSeriesForDataTable(resp, list(), NULL, list())
+    series <- result[[1]]
+    data.rows <- result[[2]]
+    data.columns <- result[[3]]
     data.rows <- sort(data.rows)
     data.table <- reader$GetFTableByData(data.rows, data.columns, series)
     return (data.table)
   }
 
-  reader$CreateDataFrame<- function(resp){
-    series <- list()
-    data.rows <- NULL
+  reader$CreateSeriesForDataFrame <- function(resp, series, data.rows)
+  {
     for (serie.point in resp$data){
       if (is.null(serie.point$Value)){
         next
@@ -454,14 +475,102 @@ DataReader <- function(client, dataset, selection){
       }
       series[[name]][time] <- serie.point$Value
     }
-    data.rows <- sort(data.rows)
+    return (list(series, data.rows))
+  }
+
+  reader$CreateDataFrame<- function(resp){
+    result  <- reader$CreateSeriesForDataFrame(resp, list(), NULL)
+    series <- result[[1]]
+    data.rows <- sort(result[[2]])
     data.table <- reader$GetDataFrameByData(data.rows, series)
     return (data.table)
   }
 
+  reader$CreateResultObjectByType <- function (result, type)
+  {
+    series <- if (type =="zoo" || type =="xts" || type == "ts" || type == "MetaDataFrame") result else result[[1]]
+    if (type == 'DataFrame'){
+      data.rows <- sort(result[[2]])
+      data.table <- reader$GetDataFrameByData(data.rows, series)
+      return (data.table)
+    }
+    if (type == 'MetaDataFrame')
+    {
+      data.rows <- reader$CreateAttributesNamesForMetadata()
+      data.table <- reader$GetDataFrameByData(data.rows, series)
+      return (data.table)
+    }
+    if (type == 'DataTable'){
+      data.rows <- sort(result[[2]])
+      data.columns <- result[[3]]
+      data.table <- reader$GetFTableByData(data.rows, data.columns, series)
+      return (data.table)
+    }
+    if (type == 'MetaDataTable')
+    {
+      data.rows <- reader$CreateAttributesNamesForMetadata()
+      data.columns <- result[[2]]
+      data.table <- reader$GetFTableByData(data.rows, data.columns, series, FALSE)
+      return (data.table)
+    }
+    if (type == "zoo")
+      return (reader$CreateZoo(series))
+    if (type == "xts")
+      return (reader$CreateXts(series))
+    if (type == "ts")
+      return (reader$CreateTs(series))
+  }
+
+  reader$CreateResultSeries <- function(data, result, type){
+    if (type == 'DataTable'){
+      series <- result[[1]]
+      data.rows <- result[[2]]
+      data.columns <- result[[3]]
+      return(reader$CreateSeriesForDataTable(data, series, data.rows, data.columns))
+    }
+    if (type == 'MetaDataTable'){
+      series <- result [[1]]
+      data.columns <- result[[2]]
+      return(reader$CreateSeriesForMetaDataTable(data, series, data.columns))
+    }
+    if (type == 'DataFrame'){
+      series <- result[[1]]
+      data.rows <- result[[2]]
+      return(reader$CreateSeriesForDataFrame(data, series, data.rows))
+    }
+    if (type == 'MetaDataFrame'){
+      return(reader$CreateSeriesForMetaDataFrame(data, result))
+    }
+    if (type =="ts" ||type =="xts" || type =="zoo")
+      return(reader$CreateSeriesForTsXtsZoo(data, result))
+    else {
+      error <- simpleError(sprintf("Unknown type %1s",type))
+      stop(error)
+    }
+  }
+
+
   reader$GetObjectByType <- function(type){
     for (dim in reader$dataset$dimensions){
       reader$dimensions <- c(reader$dimensions, Dimension(reader$client$GetDimension(reader$dataset$id, dim$id)))
+    }
+    # initial values
+    result <- if (type == 'MetaDataTable')
+      list (list(), list())
+    else if (type =='DataTable' || type == 'DataFrame')
+      list (list(), NULL, list())
+    else
+      list()
+
+    if (length(reader$selection)==1 & !is.null(reader$selection$mnemonics))
+    {
+      mnemonics.resp <- reader$client$GetMnemonics(reader$selection$mnemonics)
+      for (item in mnemonics.resp)
+      {
+        data <- item$pivot
+        result <- reader$CreateResultSeries(data, result, type)
+      }
+      return (reader$CreateResultObjectByType(result, type))
     }
     pivot.request <- reader$CreatePivotRequest()
     pivot.request.json <- pivot.request$SaveToJson()
@@ -470,25 +579,10 @@ DataReader <- function(client, dataset, selection){
       warning(simpleError("Dataset do not have data by this selection"))
       return (NULL)
     }
-    if (type == 'DataTable'){
-      table <- reader$CreateDataTable(data)
-      return (table)
-    }
-    if (type == 'MetaDataTable'){
-      table <- reader$CreateMetaDataTable(data)
-      return (table)
-    }
-    if (type == 'DataFrame'){
-      table <- reader$CreateDataFrame(data)
-      return (table)
-    }
-    if (type == 'MetaDataFrame'){
-      table <- reader$CreateMetaDataFrame(data)
-      return (table)
-    }
-    series <- reader$GetSeries(data, type)
-    return (series)
+    result <- reader$CreateResultSeries(data, result, type)
+    return (reader$CreateResultObjectByType(result, type))
   }
+
   reader <- list2env(reader)
   class(reader) <- "DataReader"
   return(reader)

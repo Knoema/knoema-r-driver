@@ -185,3 +185,5 @@ PivotRequest <- function(dataset){
   class(pivot.request) <- "PivotRequest"
   return(pivot.request)
 }
+
+
