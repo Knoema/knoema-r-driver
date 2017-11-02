@@ -488,65 +488,79 @@ DataReader <- function(client, dataset, selection){
 
   reader$CreateResultObjectByType <- function (result, type)
   {
-    series <- if (type =="zoo" || type =="xts" || type == "ts" || type == "MetaDataFrame") result else result[[1]]
-    if (type == 'DataFrame'){
-      data.rows <- sort(result[[2]])
-      data.table <- reader$GetDataFrameByData(data.rows, series)
-      return (data.table)
-    }
-    if (type == 'MetaDataFrame')
-    {
-      data.rows <- reader$CreateAttributesNamesForMetadata()
-      data.table <- reader$GetDataFrameByData(data.rows, series)
-      return (data.table)
-    }
-    if (type == 'DataTable'){
-      data.rows <- sort(result[[2]])
-      data.columns <- result[[3]]
-      data.table <- reader$GetFTableByData(data.rows, data.columns, series)
-      return (data.table)
-    }
-    if (type == 'MetaDataTable')
-    {
-      data.rows <- reader$CreateAttributesNamesForMetadata()
-      data.columns <- result[[2]]
-      data.table <- reader$GetFTableByData(data.rows, data.columns, series, FALSE)
-      return (data.table)
-    }
-    if (type == "zoo")
-      return (reader$CreateZoo(series))
-    if (type == "xts")
-      return (reader$CreateXts(series))
-    if (type == "ts")
-      return (reader$CreateTs(series))
+     switch (type,
+      "DataFrame"={
+       series = result[[1]]
+       data.rows <- sort(result[[2]])
+       data.table <- reader$GetDataFrameByData(data.rows, series)
+       return (data.table)
+      },
+      "MetaDataFrame" ={
+        data.rows <- reader$CreateAttributesNamesForMetadata()
+        data.table <- reader$GetDataFrameByData(data.rows, result)
+        return (data.table)
+      },
+      "DataTable" = {
+        series = result [[1]]
+        data.rows <- sort(result[[2]])
+        data.columns <- result[[3]]
+        data.table <- reader$GetFTableByData(data.rows, data.columns, series)
+        return (data.table)
+      },
+      "MetaDataTable"= {
+        series = result[[1]]
+        data.rows <- reader$CreateAttributesNamesForMetadata()
+        data.columns <- result[[2]]
+        data.table <- reader$GetFTableByData(data.rows, data.columns, series, FALSE)
+        return (data.table)
+      },
+      "zoo"={
+        return (reader$CreateZoo(result))
+      },
+      "xts"={
+        return (reader$CreateXts(result))
+      },
+      "ts"={
+        return (reader$CreateTs(result))
+      }
+    )
   }
 
   reader$CreateResultSeries <- function(data, result, type){
-    if (type == 'DataTable'){
-      series <- result[[1]]
-      data.rows <- result[[2]]
-      data.columns <- result[[3]]
-      return(reader$CreateSeriesForDataTable(data, series, data.rows, data.columns))
-    }
-    if (type == 'MetaDataTable'){
-      series <- result [[1]]
-      data.columns <- result[[2]]
-      return(reader$CreateSeriesForMetaDataTable(data, series, data.columns))
-    }
-    if (type == 'DataFrame'){
-      series <- result[[1]]
-      data.rows <- result[[2]]
-      return(reader$CreateSeriesForDataFrame(data, series, data.rows))
-    }
-    if (type == 'MetaDataFrame'){
-      return(reader$CreateSeriesForMetaDataFrame(data, result))
-    }
-    if (type =="ts" ||type =="xts" || type =="zoo")
-      return(reader$CreateSeriesForTsXtsZoo(data, result))
-    else {
-      error <- simpleError(sprintf("Unknown type %1s",type))
-      stop(error)
-    }
+    switch (type,
+         "DataTable" = {
+           series <- result[[1]]
+           data.rows <- result[[2]]
+           data.columns <- result[[3]]
+           return(reader$CreateSeriesForDataTable(data, series, data.rows, data.columns))
+         },
+         "MetaDataTable" ={
+           series <- result [[1]]
+           data.columns <- result[[2]]
+           return(reader$CreateSeriesForMetaDataTable(data, series, data.columns))
+         },
+         "DataFrame" = {
+           series <- result[[1]]
+           data.rows <- result[[2]]
+           return(reader$CreateSeriesForDataFrame(data, series, data.rows))
+         },
+         "MetaDataFrame"={
+           return(reader$CreateSeriesForMetaDataFrame(data, result))
+         },
+         "ts"={
+           return(reader$CreateSeriesForTsXtsZoo(data, result))
+         },
+         "xts"={
+           return(reader$CreateSeriesForTsXtsZoo(data, result))
+         },
+         "zoo"={
+           return(reader$CreateSeriesForTsXtsZoo(data, result))
+         },
+         {
+           error <- simpleError(sprintf("Unknown type %1s",type))
+           stop(error)
+         }
+    )
   }
 
 
@@ -555,12 +569,18 @@ DataReader <- function(client, dataset, selection){
       reader$dimensions <- c(reader$dimensions, Dimension(reader$client$GetDimension(reader$dataset$id, dim$id)))
     }
     # initial values
-    result <- if (type == 'MetaDataTable')
-      list (list(), list())
-    else if (type =='DataTable' || type == 'DataFrame')
-      list (list(), NULL, list())
-    else
-      list()
+    result <- switch (type,
+              "MetaDataTable"= {
+                list (list(), list())
+              },
+              "DataTable"={
+                list (list(), NULL, list())
+              },
+              "DataFrame" = {
+                list (list(), NULL, list())
+              },
+              list()
+              )
 
     if (length(reader$selection)==1 & !is.null(reader$selection$mnemonics))
     {
