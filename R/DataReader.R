@@ -585,6 +585,11 @@ DataReader <- function(client, dataset, selection){
     if (length(reader$selection)==1 & !is.null(reader$selection$mnemonics))
     {
       mnemonics.resp <- reader$client$GetMnemonics(reader$selection$mnemonics)
+      if (length(mnemonics.resp)==0)
+      {
+        warning(simpleError("Series by these mnemonics don't found"))
+        return (NULL)
+      }
       for (item in mnemonics.resp)
       {
         data <- item$pivot
