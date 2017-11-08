@@ -15,7 +15,7 @@ test_that("test selection is not specified error",{
 
 context("test wrong dimension error")
 test_that("test wrong dimension error error",{
-  expect_error(Knoema("IMFWEO2017Apr", list(indicator = "LP;NGDP")), "Dimension with id or name indicator is not found")
+  expect_error(Knoema("IMFWEO2017Apr", list(indicator = "LP;NGDP"),client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU"), "Dimension with id or name indicator is not found")
 })
 
 context("test empty dimension selection error")

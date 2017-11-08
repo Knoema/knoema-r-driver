@@ -187,7 +187,7 @@ test_that("get series from dataset by partial selection xts",{
   data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),"xts", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
-  sname = "A - Six-month London interbank offered rate (LIBOR) (Percent) - Japan"
+  sname = "A - Japan - Six-month London interbank offered rate (LIBOR) (Percent)"
 
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),FALSE)
@@ -203,7 +203,7 @@ test_that("get series from dataset by partial selection zoo",{
   data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),"zoo", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
-  sname = "A - Six-month London interbank offered rate (LIBOR) (Percent) - Japan"
+  sname = "A - Japan - Six-month London interbank offered rate (LIBOR) (Percent)"
 
   time_ser = data_frame[[sname]]
   expect_equal(is.ts(time_ser),FALSE)

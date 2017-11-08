@@ -1,0 +1,37 @@
+context("get data from flat dataset ts error")
+test_that("get data from flat dataset ts error",{
+  expect_error(Knoema("cblymmf", list(Country="Albania;Australia", Keyword="FGP;TWP;TRP"), client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU"),
+  "Types ts, xts, zoo are not supported for flat datasets", fixed = TRUE)
+})
+
+context("get data from flat dataset xts error")
+test_that("get data from flat dataset xts error",{
+  expect_error(Knoema("cblymmf", list(Country="Albania;Australia", Keyword="FGP;TWP;TRP"),"xts", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU"),
+    "Types ts, xts, zoo are not supported for flat datasets", fixed = TRUE)
+})
+
+context("get data from flat dataset zoo error")
+test_that("get data from flat dataset zoo error",{
+  expect_error(Knoema("cblymmf", list(Country="Albania;Australia", Keyword="FGP;TWP;TRP"),"zoo", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU"),
+    "Types ts, xts, zoo are not supported for flat datasets", fixed = TRUE)
+})
+
+context("get data from flat dataset DataFrame")
+test_that("get data from flat dataset DataFrame",{
+    data_frame = Knoema("cblymmf", list(Country="Albania;Australia", Keyword="FGP;TWP;TRP"),"DataFrame", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+    expect_equal(length(data_frame), 4)
+    sname = "Albania - FGP - D"
+    expect_equal(data_frame[["All time",sname]], 8)
+    sname ="Australia - TWP - D"
+    expect_equal(data_frame[["All time",sname]], 8)
+})
+
+context("get data from flat dataset MetaDataFrame")
+test_that("get data from flat dataset MetaDataFrame",{
+  data_frame = Knoema("cblymmf", list(Country="Albania;Australia", Keyword="FGP;TWP;TRP"),"MetaDataFrame", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  expect_equal(length(data_frame), 4)
+  sname = "Albania - FGP - D"
+  expect_equal(data_frame[["Unit",sname]], "# of records")
+  sname ="Australia - TWP - D"
+  expect_equal(data_frame[["Scale",sname]], "1")
+})

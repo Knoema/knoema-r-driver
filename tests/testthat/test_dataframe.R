@@ -36,9 +36,9 @@ context ("get series from dataset by partial selection dataframe")
 test_that("get series from dataset by partial selection",{
   data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),"DataFrame", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
-  sname = "Six-month London interbank offered rate (LIBOR) (Percent) - Japan - A"
+  sname = "Japan - Six-month London interbank offered rate (LIBOR) (Percent) - A"
   expect_equal(data_frame[['2012-01-01',sname]], 0.325)
-  sname ="Six-month London interbank offered rate (LIBOR) (Percent) - United States - A"
+  sname ="United States - Six-month London interbank offered rate (LIBOR) (Percent) - A"
   expect_equal(data_frame[['2007-01-01',sname]], 5.252)
 })
 
@@ -46,11 +46,20 @@ context ("get series from dataset by partial selection Metadataframe")
 test_that("get series from dataset by partial selection",{
   data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),"MetaDataFrame", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
-  sname = "Six-month London interbank offered rate (LIBOR) (Percent) - Japan - A"
+  sname = "Japan - Six-month London interbank offered rate (LIBOR) (Percent) - A"
   expect_equal(data_frame[['Unit',sname]], "Percent")
   expect_equal(data_frame[['Subject SubjectDescription',sname]], "Six-month London interbank offered rate (LIBOR)")
-  sname ="Six-month London interbank offered rate (LIBOR) (Percent) - United States - A"
+  sname ="United States - Six-month London interbank offered rate (LIBOR) (Percent) - A"
   expect_equal(data_frame[['Country Id',sname]], "111")
   expect_equal(data_frame[['Mnemonics',sname]], "NULL")
+})
+
+context ("get series from dataset by weekly frequency DataFame")
+test_that("get series from dataset by weekly frequency DataFame",{
+  data_frame = Knoema('WOERDP2015', list(location='China', Indicator='EMBI Sovereign Spreads (Basis points)', frequency='W'), type = 'DataFrame', client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  expect_equal(length(data_frame),1)
+  sname = "China - EMBI Sovereign Spreads (Basis points) - W"
+  expect_equal(data_frame[['2010-01-04',sname]], 44)
+  expect_equal(data_frame[['2015-09-07',sname]], 183)
 })
 

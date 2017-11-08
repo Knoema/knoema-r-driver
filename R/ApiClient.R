@@ -114,6 +114,26 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
     return (client$ApiPost(path, pivot.request))
   }
 
+  #The method is getting data by streaming request
+  client$GetRawData <- function (pivot.request){
+    path <- "api/1.0/data/raw"
+    raw.data <- client$ApiPost(path, pivot.request)
+    raw.series <- raw.data$data
+    token <- raw.data$continuationToken
+    while (!is.null(token))
+    {
+      raw.data.with.token <- client$GetRawDataWithToken(token)
+      raw.series <- c(raw.series, raw.data.with.token$data)
+      token <- raw.data.with.token$continuationToken
+    }
+    return (raw.series)
+  }
+
+  client$GetRawDataWithToken <- function(token){
+    path = "api/1.0/data/raw/?continuationToken=%1s"
+    return (client$ApiGet(sprintf(path,token)))
+  }
+
   client$GetMnemonics <- function(mnemonics){
     path <- "api/1.0/data/mnemonics?mnemonics=%1s"
     return (client$ApiGet(sprintf(path, mnemonics)))

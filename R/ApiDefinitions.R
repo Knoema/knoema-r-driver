@@ -30,8 +30,6 @@ DimensionMember <- function(data){
     hasdata = data$hasData,
     fields = data$fields
   )
-  dimension.member <- list2env(dimension.member)
-  class(dimension.member) <- "DimensionMember"
   return(dimension.member)
 }
 
@@ -40,34 +38,31 @@ Dimension <- function (data){
   dimension=list(
     dim.model = DimensionModel(data),
     items=list(),
-    fields = list()
+    fields = list(),
+    key.map = list(),
+    id.map = list(),
+    name.map = list()
   )
   dimension$items <- lapply(1:length(data$items),function(x) DimensionMember(data$items[x][[1]]))
   dimension$fields <- data$fields
 
+  dimension$key.map <- sapply(dimension$items, function(x) split(x, x$key))
+  dimension$name.map <- sapply(dimension$items, function(x) split(x, toupper(x$name)))
+  dimension$id.map <- sapply(dimension$items, function(x) if ('id' %in% names(x$fields)) split(x, toupper(x$fields$id)))
+
   # The method searches member of dimension by given member key
   dimension$FindMemberByKey <- function(member.key){
-    for (item in dimension$items)
-      if (item$key == member.key)
-        return (item)
-    return (NULL)
+    return (dimension$key.map[[as.character(as.integer(member.key))]])
   }
 
   # The method searches member of dimension by given member id
   dimension$FindMemberById <- function(member.id){
-    for (item in dimension$items) {
-      if ("id" %in% names(item$fields) & IsEqualStringsIgnoreCase(item$fields$id, member.id))
-        return (item)
-    }
-    return (NULL)
+    return (dimension$id.map[[toupper(as.character(member.id))]])
   }
 
   # The method searches member of dimension by given member name
-  dimension$FindMemberByName <-function (member.name){
-    for (item in dimension$items)
-      if (IsEqualStringsIgnoreCase(item$name, member.name))
-        return (item)
-    return (NULL)
+  dimension$FindMemberByName <- function (member.name){
+    return (dimension$name.map[[toupper(member.name)]])
   }
   dimension <- list2env(dimension)
   class(dimension) <- "Dimension"
@@ -88,6 +83,7 @@ TimeSeriesAttribute <- function (data){
 Dataset <-function (data){
   dataset = list(
     id = data$id,
+    type = data$type,
     dimensions = DimensionModelList(data$dimensions),
     time.series.attributes = list()
    )
@@ -185,5 +181,6 @@ PivotRequest <- function(dataset){
   class(pivot.request) <- "PivotRequest"
   return(pivot.request)
 }
+
 
 
