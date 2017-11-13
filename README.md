@@ -21,8 +21,8 @@ Note: the CRAN version migth not reflect the latest changes made to this package
 
 # Authentication
 By default, the package allows you to work only with public datasets from the site knoema.com and has a limit on the number of requests.
-To make full use of the package we recommend you set parameters client.id and client.secret. You can get these parameters after registering on the site knoema.com, in the section "My profile - Apps - create new" (or use existing applications).
-How to set these parameters will be shown below.
+To make full use of the package we recommend you use parameters client.id and client.secret. You can get these parameters after registering on the site knoema.com, in the section "My profile - Apps - create new" (or use existing applications). For a quick call you can use the link https://knoema.com/user/apps. 
+If on this page you have some applications - open one of them or create a new one. You can see the parameters client id and client secret at the bottom of the page and then use them in the functions. How to use these parameters in the functions will be shown below.
 
 # Retrieving series from datasets
 There is one method for retrieving series from datasets in R: the Knoema method. The method works with knoema datasets.
@@ -62,13 +62,13 @@ In addition to the required using of the selections for dimensions, you can addi
 
     data = Knoema("IMFWEO2017Apr",list (country = "914;512;111", subject = "lp;ngdp", frequency = "A", timerange = "2007-2017"))
     
-The package supports such formats as "ts", "xts" and "zoo". By default type is equal "ts". How to use the type shown in the example below:
+The package supports such formats as "ts", "xts" and "zoo", "DataFrame", "DataTable", "MetaDataFrame", "MetaDataTable". By default type is equal "ts". How to use the type shown in the example below:
 
     data = Knoema("IMFWEO2017Apr",list (country = "914;512;111", subject = "lp;ngdp"), type = "zoo") 
     
 In order to get access to private datasets please use parameters client.id and client.secret in a function:
 
-    data = Knoema("MEI_BTS_COS_2015", list(location = "AT;AU", subject = "BSCI", measure = "blsa", frequency = "Q;M"), type = "xts", client.id = "some client id", client.secret = "some client secret")
+    data = Knoema("MEI_BTS_COS_2015", list(location = "AT;AU", subject = "BSCI", measure = "blsa", frequency = "Q;M"), type = "DataFrame", client.id = "some client id", client.secret = "some client secret")
 
 # Possible errors in Knoema package and how to avoid them
 1.  Error: "Client error: (403) Forbidden"
