@@ -24,23 +24,23 @@
 #'            client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
 #' @export
 
-Knoema <- function(dataset.id, selection, type="ts", host = "", client.id = "", client.secret = "")
-{
-  if (host == "")
-    if (Sys.getenv("KNOEMA_HOST") == ""){
+Knoema <- function(dataset.id, selection, type="ts", host = "", client.id = "", client.secret = "") {
+  if (host == "") {
+    if (Sys.getenv("KNOEMA_HOST") == "") {
       host = "knoema.com"
     } else {
       host = Sys.getenv("KNOEMA_HOST")
     }
-  client = ApiClient(host, client.id, client.secret)
+  }
+  client <- ApiClient(host, client.id, client.secret)
   client$CheckCorrectHost()
-  if (!is.character(dataset.id)){
-    e = simpleError(sprintf("dataset.id should be a string. Can't be %1s",typeof(dataset.id)))
+  if (!is.character(dataset.id)) {
+    e <- simpleError(sprintf("dataset.id should be a string. Can't be %1s",typeof(dataset.id)))
     stop(e)
   }
   dataset <- client$GetDataset(dataset.id)
-  if (is.character(dataset)){
-    error = simpleError(dataset)
+  if (is.character(dataset)) {
+    error <- simpleError(dataset)
     stop(error)
   }
   data.reader <- DataReader(client, dataset, selection)

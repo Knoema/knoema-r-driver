@@ -21,7 +21,7 @@
 #' @importFrom stats ftable
 
 
-DataReader <- function(client, dataset, selection){
+DataReader <- function(client, dataset, selection) {
     reader <- list(
     client = client,
     dataset = Dataset(dataset),
@@ -29,7 +29,7 @@ DataReader <- function(client, dataset, selection){
     dimensions = list()
   )
 
-  reader$FindDimension <- function (dim.name.or.id){
+  reader$FindDimension <- function (dim.name.or.id) {
     dim <- reader$dataset$FindDimensionByName(dim.name.or.id)
     if (is.null(dim)) {
       dim <- reader$dataset$FindDimensionById(dim.name.or.id)
@@ -37,11 +37,11 @@ DataReader <- function(client, dataset, selection){
     return (dim)
   }
 
-  reader$GetDimMembers <- function(dim, split.values){
+  reader$GetDimMembers <- function(dim, split.values) {
     members <- NULL
     for (value in split.values) {
       if (is.null(value)) {
-        error <- simpleError(sprintf("Selection for dimension %1s is empty",dim$name))
+        error <- simpleError(sprintf("Selection for dimension %1s is empty", dim$name))
         stop(error)
       }
       member <- dim$FindMemberById(value)
@@ -55,18 +55,18 @@ DataReader <- function(client, dataset, selection){
     return (members)
   }
 
-  reader$CheckCorrectFrequencies <- function (values){
+  reader$CheckCorrectFrequencies <- function (values) {
     correct.freq <- list("A","H","Q","M","W","D")
     list.condition <- !values %in% correct.freq
     list.err <- values[list.condition]
     if (length(list.err)>0) {
-      error <- simpleError(sprintf("The following frequencies are not correct: %1s",paste(list.err,sep="", collapse =",")))
+      error <- simpleError(sprintf("The following frequencies are not correct: %1s", paste(list.err,sep="", collapse =",")))
       stop(error)
     }
     return (TRUE)
   }
 
-  reader$CreatePivotRequest <- function (){
+  reader$CreatePivotRequest <- function () {
     request <- PivotRequest(dataset$id)
     filter.dims <- list()
     time.range <- NULL
@@ -86,11 +86,11 @@ DataReader <- function(client, dataset, selection){
       dim <- reader$FindDimension(item)
       if (is.null(dim))
       {
-         error <- simpleError(sprintf("Dimension with id or name %1s is not found",item))
+         error <- simpleError(sprintf("Dimension with id or name %1s is not found", item))
          stop(error)
       }
-      filter.dims <- c(filter.dims,dim)
-      for (dimension in reader$dimensions){
+      filter.dims <- c(filter.dims, dim)
+      for (dimension in reader$dimensions) {
         if(dimension$dim.model$id == dim$id)
         {
           dim2 <- dimension
@@ -99,7 +99,7 @@ DataReader <- function(client, dataset, selection){
       }
       members <- reader$GetDimMembers(dim2, splited.values)
       if (length(members) == 0) {
-        e = simpleError(sprintf("Selection for dimension %1s is empty",dim$name))
+        e = simpleError(sprintf("Selection for dimension %1s is empty", dim$name))
         stop(e)
       }
       l <- c(request$get("stub"),PivotItem(dim$id, members))
@@ -107,7 +107,7 @@ DataReader <- function(client, dataset, selection){
     }
 
     reader$AddFullSelectionByEmptyDimValues(filter.dims, request)
-    if (length(time.range != 0)){
+    if (length(time.range != 0)) {
       l <- c(request$get("header"),PivotTimeItem("Time", time.range, "range"))
       request$set("header", l)
     } else {
@@ -120,19 +120,19 @@ DataReader <- function(client, dataset, selection){
 
   reader$AddFullSelectionByEmptyDimValues <- function(filter.dims, request)
   {
-    dims <- lapply(1:length(reader$dataset$dimensions),function(x) reader$dataset$dimensions[[x]]$id)
-    dims.from.filter <- lapply(1:length(filter.dims),function(x) filter.dims[[x]]$id)
+    dims <- lapply(1:length(reader$dataset$dimensions), function(x) reader$dataset$dimensions[[x]]$id)
+    dims.from.filter <- lapply(1:length(filter.dims), function(x) filter.dims[[x]]$id)
     list.condition <- sapply(dims, function(x) ! x %in% dims.from.filter)
     out.of.filter.dim.names <- dims[list.condition]
     for (id in out.of.filter.dim.names)
     {
-      l <- c(request$get("stub"),PivotItem(id, list()))
+      l <- c(request$get("stub"), PivotItem(id, list()))
       request$set("stub", l)
     }
   }
 
 
-  reader$CreateTs <- function(series){
+  reader$CreateTs <- function(series) {
     result <- list()
     frequencies.seq <- list(A = "year", H = "6 month", Q = "quarter", M = "month", W = "week", D = "day")
 
@@ -148,13 +148,13 @@ DataReader <- function(client, dataset, selection){
       max.date <- max(dates)
       all.dates <- seq(min.date,max.date, by = freq.seq)
       values <- sapply(1:length(all.dates), function(x) {
-          dat = all.dates[x]
-          cond.v <- as.Date(dat) %in% dates
-          return(ifelse (!cond.v, NA,  series[[i]][[as.character(dat)]]))
+          dat <- all.dates[x]
+          cond.v <- dat %in% dates
+          return(ifelse (cond.v, series[[i]][[as.character(dat)]], NA))
       })
 
       start.by.freq <- switch(freq,
-                             "A"= c(year(min.date),1),
+                             "A"= c(year(min.date), 1),
                              "H" = c(year(min.date), (month(min.date)-1)%/%6+1),
                              "Q" = c(year(min.date), quarter(min.date)),
                              "M" = c(year(min.date), month(min.date)),
@@ -166,11 +166,11 @@ DataReader <- function(client, dataset, selection){
     return (result)
   }
 
-  reader$CreateXts <- function(series){
+  reader$CreateXts <- function(series) {
     result <- list()
     for (i in 1:length(series)) {
       title <- names(series[i])
-      if (length(names(series[[i]])) == 0){
+      if (length(names(series[[i]])) == 0) {
         next
       }
       dates <- as.Date(names(series[[i]]))
@@ -180,12 +180,12 @@ DataReader <- function(client, dataset, selection){
                        "M" = as.yearmon(dates),
                        dates)
       values <- unlist(series[[i]], use.names = FALSE)
-      result[[title]] <- xts(values,order.by = dates.xts, frequency = FrequencyToInt(freq))
+      result[[title]] <- xts(values, order.by = dates.xts, frequency = FrequencyToInt(freq))
     }
     return (result)
   }
 
-  reader$CreateZoo <-function(series){
+  reader$CreateZoo <-function(series) {
     result <- list()
     for (i in 1:length(series)) {
       title <- names(series[i])
@@ -208,22 +208,22 @@ DataReader <- function(client, dataset, selection){
 
   reader$CreateSeriesForTsXtsZooForPivotApi <- function (resp, series)
   {
-    for (serie.point in resp$data){
-      if (is.null(serie.point$Value)){
+    for (serie.point in resp$data) {
+      if (is.null(serie.point$Value)) {
         next
       }
       frequency <- serie.point$Frequency
       name <- frequency
       # get name of time series
-      for (stub in resp$stub){
+      for (stub in resp$stub) {
         dim <- stub$dimensionId
         name <-  paste(name, serie.point[[dim]], sep = " - ")
       }
       # create key-value list where time is the key
-      if (is.null(series[[name]])){
+      if (is.null(series[[name]])) {
         series[[name]] <- list()
       }
-      time <- tryCatch(format(as.Date(serie.point$Time), "%Y-%m-%d"),error = function(e) stop(simpleError("Types ts, xts, zoo are not supported for flat datasets")))
+      time <- tryCatch(format(as.Date(serie.point$Time), "%Y-%m-%d"), error = function(e) stop(simpleError("Types ts, xts, zoo are not supported for flat datasets")))
       series[[name]][time] <- serie.point$Value
     }
     return (series)
@@ -232,28 +232,28 @@ DataReader <- function(client, dataset, selection){
   reader$CreateSeriesForTsXtsZooForStreamingApi <- function (resp, series)
   {
     frequencies.seq <- list(A = "year", H = "6 month", Q = "quarter", M = "month", W = "week", D = "day")
-    for (serie.point in resp){
+    for (serie.point in resp) {
       all.values <- serie.point$values
       frequency <- serie.point$frequency
       name <- frequency
       # get name of time series
-      for (dim in reader$dimensions){
+      for (dim in reader$dimensions) {
         name <- paste(name, serie.point[[dim$dim.model$id]]$name, sep = " - ")
       }
       # create key-value list where time is the key
-      if (is.null(series[[name]])){
+      if (is.null(series[[name]])) {
         series[[name]] <- list()
       }
       data.begin <- as.Date(serie.point$startDate)
       data.end <- as.Date(serie.point$endDate)
-      if (frequency == "W"){
-        data.begin <- data.begin - days(as.numeric(strftime(data.begin,"%u"))-1)
-        data.end <- data.end - days(as.numeric(strftime(data.end,"%u"))-1)
+      if (frequency == "W") {
+        data.begin <- data.begin - days(as.numeric(strftime(data.begin, "%u"))-1)
+        data.end <- data.end - days(as.numeric(strftime(data.end, "%u"))-1)
       }
-      all.dates<- seq(data.begin,data.end, by = frequencies.seq[[frequency]])
-      for (i in 1:length(all.dates)){
+      all.dates<- seq(data.begin, data.end, by = frequencies.seq[[frequency]])
+      for (i in 1:length(all.dates)) {
         val <- all.values[[i]]
-        if (!is.null(val)){
+        if (!is.null(val)) {
           time <- format(as.Date(all.dates[[i]], "%Y-%m-%d"))
           series[[name]][time] <- val
         }
@@ -262,8 +262,8 @@ DataReader <- function(client, dataset, selection){
     return (series)
   }
 
-  reader$GetSeries <- function (resp, type){
-    if (length(resp$data) == 0){
+  reader$GetSeries <- function (resp, type) {
+    if (length(resp$data) == 0) {
       warning(simpleError("Dataset do not have data by this selection"))
       return (series)
     } else {
@@ -275,13 +275,13 @@ DataReader <- function(client, dataset, selection){
     }
   }
 
-  reader$CreateMatrixForFrameOrTable <- function(data.rows, series){
+  reader$CreateMatrixForFrameOrTable <- function(data.rows, series) {
     list.for.matrix <- sapply(1:length(series), function (i) {
       dates <- names(series[[i]])
-      t <- sapply (1:length(data.rows), function (j){
+      t <- sapply (1:length(data.rows), function (j) {
         date <- data.rows[[j]]
         cond <- date %in% dates
-        ifelse(cond, series[[i]][[date]],NA)
+        ifelse(cond, series[[i]][[date]], NA)
       })
       })
 
@@ -289,12 +289,12 @@ DataReader <- function(client, dataset, selection){
     return (matrix)
   }
 
-  reader$GetFTableByData <- function (data.rows, data.columns, series, row.equal.dates = TRUE){
+  reader$GetFTableByData <- function (data.rows, data.columns, series, row.equal.dates = TRUE) {
     matrix <- reader$CreateMatrixForFrameOrTable(data.rows, series)
     length.by.columns <- unlist(lapply(1:length(data.columns), function(x) length(data.columns[[x]])), recursive = F)
     length.of.all.dimension <- c(length(data.rows), length.by.columns)
     matrix.arr <- array(matrix, length.of.all.dimension)
-    if (row.equal.dates){
+    if (row.equal.dates) {
       dimnames(matrix.arr) <- c(list(date = data.rows), data.columns)
     } else {
       dimnames(matrix.arr) <- c(list(attributes = data.rows), data.columns)
@@ -303,26 +303,26 @@ DataReader <- function(client, dataset, selection){
     return (data.table)
   }
 
-  reader$GetDataFrameByData <- function(data.rows, series){
+  reader$GetDataFrameByData <- function(data.rows, series) {
     matrix <- reader$CreateMatrixForFrameOrTable(data.rows, series)
     data.frame <- as.data.frame(matrix, row.names = data.rows, stringsAsFactors = FALSE)
     colnames(data.frame) <- names(series)
     return (data.frame)
   }
 
-  reader$GetSeriesNameWithMetadataForPivotApi <- function(series.point){
+  reader$GetSeriesNameWithMetadataForPivotApi <- function(series.point) {
     names <- list()
-    for (dim in reader$dimensions){
-      for (item in dim$items){
-        if (item$name == series.point[dim$dim.model$id]){
+    for (dim in reader$dimensions) {
+      for (item in dim$items) {
+        if (item$name == series.point[dim$dim.model$id]) {
           dim.attr <- item$fields
           break
         }
       }
-      for (attr in dim$fields){
-        if (!attr$isSystemField){
-          for (i in 1: length(dim.attr)){
-            if (IsEqualStringsIgnoreCase(names(dim.attr[i]), attr$name)){
+      for (attr in dim$fields) {
+        if (!attr$isSystemField) {
+          for (i in 1: length(dim.attr)) {
+            if (IsEqualStringsIgnoreCase(names(dim.attr[i]), attr$name)) {
               names[[paste(dim$dim.model$name, attr$displayName, sep=" ")]] <- dim.attr[[i]]
             }
           }
@@ -332,25 +332,25 @@ DataReader <- function(client, dataset, selection){
     names[["Unit"]] <- series.point$Unit
     names[["Scale"]] <- series.point$Scale
     names[["Mnemonics"]] <- ifelse(is.null(series.point$Mnemonics), "NULL", series.point$Mnemonics)
-    for (attr in reader$dataset$time.series.attributes){
+    for (attr in reader$dataset$time.series.attributes) {
         names[[attr$name]] <- series.point[[attr$name]]
     }
     return (names)
   }
 
-  reader$GetSeriesNameWithMetadataForStreamingApi <- function(series.point){
+  reader$GetSeriesNameWithMetadataForStreamingApi <- function(series.point) {
     names <- list()
-    for (dim in reader$dimensions){
-      for (item in dim$items){
-        if (item$name == series.point[[dim$dim.model$id]]$name){
+    for (dim in reader$dimensions) {
+      for (item in dim$items) {
+        if (item$name == series.point[[dim$dim.model$id]]$name) {
           dim.attr <- item$fields
           break
         }
       }
-      for (attr in dim$fields){
-        if (!attr$isSystemField){
-          for (i in 1: length(dim.attr)){
-            if (IsEqualStringsIgnoreCase(names(dim.attr[i]), attr$name)){
+      for (attr in dim$fields) {
+        if (!attr$isSystemField) {
+          for (i in 1: length(dim.attr)) {
+            if (IsEqualStringsIgnoreCase(names(dim.attr[i]), attr$name)) {
               names[[paste(dim$dim.model$name, attr$displayName, sep=" ")]] <- dim.attr[[i]]
             }
           }
@@ -360,38 +360,38 @@ DataReader <- function(client, dataset, selection){
     names[["Unit"]] <- series.point$unit
     names[["Scale"]] <- series.point$scale
     names[["Mnemonics"]] <- ifelse(is.null(series.point$mnemonics), "NULL", series.point$mnemonics)
-    for (attr in reader$dataset$time.series.attributes){
+    for (attr in reader$dataset$time.series.attributes) {
       names[[attr$name]] <- series.point$timeseriesAttributes[[attr$name]]
     }
     return (names)
   }
 
-  reader$CreateAttributesNamesForMetadata <- function(){
+  reader$CreateAttributesNamesForMetadata <- function() {
     data.rows <- NULL
-    for (dim in reader$dimensions){
-      for (attr in dim$fields){
-        if (!attr$isSystemField){
+    for (dim in reader$dimensions) {
+      for (attr in dim$fields) {
+        if (!attr$isSystemField) {
           data.rows <- c(data.rows, paste(dim$dim.model$name, attr$displayName, sep = " "))
         }
       }
     }
     data.rows <- c(data.rows, c("Unit", "Scale", "Mnemonics"))
-    for (attr in reader$dataset$time.series.attributes){
+    for (attr in reader$dataset$time.series.attributes) {
       data.rows <- c(data.rows, attr$name)
     }
     return(data.rows)
   }
 
-  reader$CreateSeriesForMetaDataTableForPivotApi <- function(resp, series, data.columns){
-    for (serie.point in resp$data){
+  reader$CreateSeriesForMetaDataTableForPivotApi <- function(resp, series, data.columns) {
+    for (serie.point in resp$data) {
       name <- NULL
       name.meta <- list()
       # get name of time series
-      for (j in 1:length(resp$stub)){
+      for (j in 1:length(resp$stub)) {
         dim <- resp$stub[[j]]$dimensionId
         dim.name <- reader$FindDimension(dim)$name
         name.element <- serie.point[[dim]]
-        if (!name.element %in% data.columns[[dim.name]]){
+        if (!name.element %in% data.columns[[dim.name]]) {
           data.columns[[dim.name]] <- c(data.columns[[dim.name]], name.element)
         }
         name <- ifelse(is.null(name), name.element, paste(name, name.element, sep = " - "))
@@ -399,26 +399,26 @@ DataReader <- function(client, dataset, selection){
       frequency <- serie.point$Frequency
       name <- paste(name, frequency, sep = " - ")
       name.meta <- reader$GetSeriesNameWithMetadataForPivotApi(serie.point)
-      if (!frequency %in% data.columns[["Frequency"]]){
+      if (!frequency %in% data.columns[["Frequency"]]) {
         data.columns[["Frequency"]] <- c(data.columns[["Frequency"]],frequency)
       }
       # create key-value list where time is the key
-      if (is.null(series[[name]])){
+      if (is.null(series[[name]])) {
         series[[name]] <- name.meta
       }
     }
     return (list(series, data.columns))
   }
 
-  reader$CreateSeriesForMetaDataTableForStreamingApi <- function(resp, series, data.columns){
-    for (serie.point in resp){
+  reader$CreateSeriesForMetaDataTableForStreamingApi <- function(resp, series, data.columns) {
+    for (serie.point in resp) {
       name <- NULL
       name.meta <- list()
       # get name of time series
-      for (dim in reader$dimensions){
+      for (dim in reader$dimensions) {
         name.element <- serie.point[[dim$dim.model$id]]$name
         dim.name <- dim$dim.model$name
-        if (!name.element %in% data.columns[[dim.name]]){
+        if (!name.element %in% data.columns[[dim.name]]) {
           data.columns[[dim.name]] <- c(data.columns[[dim.name]], name.element)
         }
         name <- ifelse(is.null(name), name.element, paste(name, name.element, sep = " - "))
@@ -426,27 +426,26 @@ DataReader <- function(client, dataset, selection){
       frequency <- serie.point$frequency
       name <- paste(name, frequency, sep = " - ")
       name.meta <- reader$GetSeriesNameWithMetadataForStreamingApi(serie.point)
-      if (!frequency %in% data.columns[["Frequency"]]){
+      if (!frequency %in% data.columns[["Frequency"]]) {
         data.columns[["Frequency"]] <- c(data.columns[["Frequency"]],frequency)
       }
       # create key-value list where time is the key
-      if (is.null(series[[name]])){
+      if (is.null(series[[name]])) {
         series[[name]] <- name.meta
       }
     }
     return (list(series, data.columns))
   }
 
-  reader$CreateSeriesForMetaDataFrameForPivotApi <- function (resp, series)
-  {
-    for (serie.point in resp$data){
-      if (is.null(serie.point$Value)){
+  reader$CreateSeriesForMetaDataFrameForPivotApi <- function (resp, series) {
+    for (serie.point in resp$data) {
+      if (is.null(serie.point$Value)) {
         next
       }
       name <- NULL
       name.meta <- list()
       # get name of time series
-      for (j in 1:length(resp$stub)){
+      for (j in 1:length(resp$stub)) {
         dim <- resp$stub[[j]]$dimensionId
         name.element = serie.point[[dim]]
         name <- ifelse(is.null(name), name.element, paste(name, name.element, sep = " - "))
@@ -455,20 +454,19 @@ DataReader <- function(client, dataset, selection){
       name <- paste(name, frequency, sep = " - ")
       name.meta <- reader$GetSeriesNameWithMetadataForPivotApi(serie.point)
       # create key-value list where time is the key
-      if (is.null(series[[name]])){
+      if (is.null(series[[name]])) {
         series[[name]] <- name.meta
       }
     }
     return (series)
   }
 
-  reader$CreateSeriesForMetaDataFrameForStreamingApi <- function (resp, series)
-  {
-    for (serie.point in resp){
+  reader$CreateSeriesForMetaDataFrameForStreamingApi <- function (resp, series) {
+    for (serie.point in resp) {
       name <- NULL
       name.meta <- list()
       # get name of time series
-      for (dim in reader$dimensions){
+      for (dim in reader$dimensions) {
         name.element <- serie.point[[dim$dim.model$id]]$name
         name <- ifelse(is.null(name), name.element, paste(name, name.element, sep = " - "))
       }
@@ -476,45 +474,44 @@ DataReader <- function(client, dataset, selection){
       name <- paste(name, frequency, sep = " - ")
       name.meta <- reader$GetSeriesNameWithMetadataForStreamingApi(serie.point)
       # create key-value list where time is the key
-      if (is.null(series[[name]])){
+      if (is.null(series[[name]])) {
         series[[name]] <- name.meta
       }
     }
     return (series)
   }
 
-  reader$CreateMetaDataFrame <- function(resp){
+  reader$CreateMetaDataFrame <- function(resp) {
     data.rows <- reader$CreateAttributesNamesForMetadata()
     series <- reader$CreateSeriesForMetaDataFrame (resp, list())[[1]]
     data.table <- reader$GetDataFrameByData(data.rows, series)
     return (data.table)
   }
 
-  reader$CreateSeriesForDataTableForPivotApi <- function (resp, series, data.rows, data.columns)
-  {
-    for (serie.point in resp$data){
+  reader$CreateSeriesForDataTableForPivotApi <- function (resp, series, data.rows, data.columns) {
+    for (serie.point in resp$data) {
       name <- NULL
       # create columns with dimension names for ftable object
-      for (stub in resp$stub){
+      for (stub in resp$stub) {
         dim <- stub$dimensionId
         dim.name <- reader$FindDimension(dim)$name
         name.element <- serie.point[[dim]]
-        if (!name.element %in% data.columns[[dim.name]]){
+        if (!name.element %in% data.columns[[dim.name]]) {
           data.columns[[dim.name]] <- c(data.columns[[dim.name]], name.element)
         }
         name <- ifelse(is.null(name), name.element, paste(name, name.element, sep = " - "))
       }
       frequency <- serie.point$Frequency
       name <- paste(name, frequency, sep = " - ")
-      if (!frequency %in% data.columns[["Frequency"]]){
+      if (!frequency %in% data.columns[["Frequency"]]) {
         data.columns[["Frequency"]] <- c(data.columns[["Frequency"]], frequency)
       }
       # create key-value list where time is the key
-      if (is.null(series[[name]])){
+      if (is.null(series[[name]])) {
         series[[name]] <- list()
       }
       time <- tryCatch(format(as.Date(serie.point$Time), "%Y-%m-%d"),error = function(e) serie.point$Time)
-      if (!time %in% data.rows){
+      if (!time %in% data.rows) {
         data.rows <- c(data.rows, time)
       }
       series[[name]][time] <- serie.point$Value
@@ -522,42 +519,41 @@ DataReader <- function(client, dataset, selection){
     return (list(series, data.rows, data.columns))
   }
 
-  reader$CreateSeriesForDataTableForStreamingApi <- function (resp, series, data.rows, data.columns)
-  {
+  reader$CreateSeriesForDataTableForStreamingApi <- function (resp, series, data.rows, data.columns) {
     frequencies.seq <- list(A = "year", H = "6 month", Q = "quarter", M = "month", W = "week", D = "day")
-    for (serie.point in resp){
+    for (serie.point in resp) {
       all.values <- serie.point$values
       name <- NULL
       # create columns with dimension names for ftable object
-      for (dim in reader$dimensions){
+      for (dim in reader$dimensions) {
         name.element <- serie.point[[dim$dim.model$id]]$name
         name <- ifelse(is.null(name), name.element, paste(name, name.element, sep = " - "))
         dim.name <- dim$dim.model$name
-        if (!name.element %in% data.columns[[dim.name]]){
+        if (!name.element %in% data.columns[[dim.name]]) {
           data.columns[[dim.name]] <- c(data.columns[[dim.name]], name.element)
         }
       }
       frequency <- serie.point$frequency
       name <- paste(name, frequency, sep = " - ")
-      if (!frequency %in% data.columns[["Frequency"]]){
+      if (!frequency %in% data.columns[["Frequency"]]) {
         data.columns[["Frequency"]] <- c(data.columns[["Frequency"]], frequency)
       }
       # create key-value list where time is the key
-      if (is.null(series[[name]])){
+      if (is.null(series[[name]])) {
         series[[name]] <- list()
       }
       data.begin <- as.Date(serie.point$startDate)
       data.end <- as.Date(serie.point$endDate)
-      if (frequency == "W"){
+      if (frequency == "W") {
         data.begin <- data.begin - days(as.numeric(strftime(data.begin,"%u"))-1)
         data.end <- data.end - days(as.numeric(strftime(data.end,"%u"))-1)
       }
       all.dates<- seq(data.begin,data.end, by = frequencies.seq[[frequency]])
-      for (i in 1:length(all.dates)){
+      for (i in 1:length(all.dates)) {
         val <- all.values[[i]]
-        if (!is.null(val)){
+        if (!is.null(val)) {
           time <- format(as.Date(all.dates[[i]], "%Y-%m-%d"))
-          if (!time %in% data.rows){
+          if (!time %in% data.rows) {
             data.rows <- c(data.rows, time)
           }
           series[[name]][time] <- val
@@ -568,7 +564,7 @@ DataReader <- function(client, dataset, selection){
   }
 
 
-  reader$CreateDataTable <- function(resp){
+  reader$CreateDataTable <- function(resp) {
     result <- reader$CreateSeriesForDataTable(resp, list(), NULL, list())
     series <- result[[1]]
     data.rows <- result[[2]]
@@ -578,15 +574,14 @@ DataReader <- function(client, dataset, selection){
     return (data.table)
   }
 
-  reader$CreateSeriesForDataFrameForPivotApi <- function(resp, series, data.rows)
-  {
-    for (serie.point in resp$data){
-      if (is.null(serie.point$Value)){
+  reader$CreateSeriesForDataFrameForPivotApi <- function(resp, series, data.rows) {
+    for (serie.point in resp$data) {
+      if (is.null(serie.point$Value)) {
         next
       }
       name <- NULL
       # create columns with dimension names for frable object
-      for (stub in resp$stub){
+      for (stub in resp$stub) {
         dim <- stub$dimensionId
         name.element <- serie.point[[dim]]
         name <- ifelse(is.null(name), name.element, paste(name, name.element, sep = " - "))
@@ -594,11 +589,11 @@ DataReader <- function(client, dataset, selection){
       frequency <- serie.point$Frequency
       name <- paste(name, frequency, sep = " - ")
       # create key-value list where time is the key
-      if (is.null(series[[name]])){
+      if (is.null(series[[name]])) {
         series[[name]] <- list()
       }
-      time <- tryCatch(format(as.Date(serie.point$Time), "%Y-%m-%d"),error = function(e) serie.point$Time)
-      if (!time %in% data.rows){
+      time <- tryCatch(format(as.Date(serie.point$Time), "%Y-%m-%d"), error = function(e) serie.point$Time)
+      if (!time %in% data.rows) {
         data.rows <- c(data.rows, time)
       }
       series[[name]][time] <- serie.point$Value
@@ -606,35 +601,34 @@ DataReader <- function(client, dataset, selection){
     return (list(series, data.rows))
   }
 
-  reader$CreateSeriesForDataFrameForStreamingApi <- function(resp, series, data.rows)
-  {
+  reader$CreateSeriesForDataFrameForStreamingApi <- function(resp, series, data.rows) {
     frequencies.seq <- list(A = "year", H = "6 month", Q = "quarter", M = "month", W = "week", D = "day")
-    for (serie.point in resp){
+    for (serie.point in resp) {
       all.values <- serie.point$values
       name <- NULL
       # create columns with dimension names for ftable object
-      for (dim in reader$dimensions){
+      for (dim in reader$dimensions) {
         name.element <- serie.point[[dim$dim.model$id]]$name
         name <- ifelse(is.null(name), name.element, paste(name, name.element, sep = " - "))
       }
       frequency <- serie.point$frequency
       name <- paste(name, frequency, sep = " - ")
       # create key-value list where time is the key
-      if (is.null(series[[name]])){
+      if (is.null(series[[name]])) {
         series[[name]] <- list()
       }
       data.begin <- as.Date(serie.point$startDate)
       data.end <- as.Date(serie.point$endDate)
-      if (frequency == "W"){
-        data.begin <- data.begin - days(as.numeric(strftime(data.begin,"%u"))-1)
-        data.end <- data.end - days(as.numeric(strftime(data.end,"%u"))-1)
+      if (frequency == "W") {
+        data.begin <- data.begin - days(as.numeric(strftime(data.begin, "%u"))-1)
+        data.end <- data.end - days(as.numeric(strftime(data.end, "%u"))-1)
       }
-      all.dates<- seq(data.begin,data.end, by = frequencies.seq[[frequency]])
-      for (i in 1:length(all.dates)){
+      all.dates<- seq(data.begin, data.end, by = frequencies.seq[[frequency]])
+      for (i in 1:length(all.dates)) {
         val <- all.values[[i]]
-        if (!is.null(val)){
+        if (!is.null(val)) {
           time <- format(all.dates[[i]], "%Y-%m-%d")
-          if (!time %in% data.rows){
+          if (!time %in% data.rows) {
             data.rows <- c(data.rows, time)
           }
           series[[name]][time] <- val
@@ -644,7 +638,7 @@ DataReader <- function(client, dataset, selection){
     return (list(series, data.rows))
   }
 
-  reader$CreateDataFrame<- function(resp){
+  reader$CreateDataFrame<- function(resp) {
     result  <- reader$CreateSeriesForDataFrame(resp, list(), NULL)
     series <- result[[1]]
     data.rows <- sort(result[[2]])
@@ -652,8 +646,7 @@ DataReader <- function(client, dataset, selection){
     return (data.table)
   }
 
-  reader$CreateResultObjectByType <- function (result, type)
-  {
+  reader$CreateResultObjectByType <- function (result, type) {
      switch (type,
       "DataFrame"={
        series = result[[1]]
@@ -692,7 +685,7 @@ DataReader <- function(client, dataset, selection){
     )
   }
 
-  reader$CreateResultSeriesForPivotApi <- function(data, result, type){
+  reader$CreateResultSeriesForPivotApi <- function(data, result, type) {
     switch (type,
             "DataTable" = {
               series <- result[[1]]
@@ -700,7 +693,7 @@ DataReader <- function(client, dataset, selection){
               data.columns <- result[[3]]
               return(reader$CreateSeriesForDataTableForPivotApi(data, series, data.rows, data.columns))
             },
-            "MetaDataTable" ={
+            "MetaDataTable" = {
               series <- result [[1]]
               data.columns <- result[[2]]
               return(reader$CreateSeriesForMetaDataTableForPivotApi(data, series, data.columns))
@@ -710,16 +703,16 @@ DataReader <- function(client, dataset, selection){
               data.rows <- result[[2]]
               return(reader$CreateSeriesForDataFrameForPivotApi(data, series, data.rows))
             },
-            "MetaDataFrame"={
+            "MetaDataFrame"= {
               return(reader$CreateSeriesForMetaDataFrameForPivotApi(data, result))
             },
-            "ts"={
+            "ts"= {
               return(reader$CreateSeriesForTsXtsZooForPivotApi(data, result))
             },
-            "xts"={
+            "xts"= {
               return(reader$CreateSeriesForTsXtsZooForPivotApi(data, result))
             },
-            "zoo"={
+            "zoo"= {
               return(reader$CreateSeriesForTsXtsZooForPivotApi(data, result))
             },
             {
@@ -730,7 +723,7 @@ DataReader <- function(client, dataset, selection){
   }
 
 
-  reader$CreateResultSeriesForStreamingApi <- function(data, result, type){
+  reader$CreateResultSeriesForStreamingApi <- function(data, result, type) {
     switch (type,
          "DataTable" = {
            series <- result[[1]]
@@ -738,7 +731,7 @@ DataReader <- function(client, dataset, selection){
            data.columns <- result[[3]]
            return(reader$CreateSeriesForDataTableForStreamingApi(data, series, data.rows, data.columns))
          },
-         "MetaDataTable" ={
+         "MetaDataTable" = {
            series <- result [[1]]
            data.columns <- result[[2]]
            return(reader$CreateSeriesForMetaDataTableForStreamingApi(data, series, data.columns))
@@ -748,16 +741,16 @@ DataReader <- function(client, dataset, selection){
            data.rows <- result[[2]]
            return(reader$CreateSeriesForDataFrameForStreamingApi(data, series, data.rows))
          },
-         "MetaDataFrame"={
+         "MetaDataFrame"= {
            return(reader$CreateSeriesForMetaDataFrameForStreamingApi(data, result))
          },
-         "ts"={
+         "ts"= {
            return(reader$CreateSeriesForTsXtsZooForStreamingApi(data, result))
          },
-         "xts"={
+         "xts"= {
            return(reader$CreateSeriesForTsXtsZooForStreamingApi(data, result))
          },
-         "zoo"={
+         "zoo"= {
            return(reader$CreateSeriesForTsXtsZooForStreamingApi(data, result))
          },
          {
@@ -767,26 +760,24 @@ DataReader <- function(client, dataset, selection){
     )
   }
 
-  reader$GetObjectForSearchingByMnemonics <- function(type, result){
+  reader$GetObjectForSearchingByMnemonics <- function(type, result) {
     mnemonics.resp <- reader$client$GetMnemonics(reader$selection$mnemonics)
-    if (length(mnemonics.resp)==0)
-    {
+    if (length(mnemonics.resp)==0) {
       warning(simpleError("Series by these mnemonics don't found"))
       return (NULL)
     }
-    for (item in mnemonics.resp)
-    {
+    for (item in mnemonics.resp) {
       data <- item$pivot
       result <- reader$CreateResultSeriesForPivotApi(data, result, type)
     }
     return (reader$CreateResultObjectByType(result, type))
   }
 
-  reader$GetObjectForRegularDataset <- function (type, result){
+  reader$GetObjectForRegularDataset <- function (type, result) {
     pivot.request <- reader$CreatePivotRequest()
     pivot.request.json <- pivot.request$SaveToJson()
     data <- reader$client$GetRawData(pivot.request.json)
-      if (length(data) == 0){
+      if (length(data) == 0) {
         warning(simpleError("Dataset do not have data by this selection"))
         return (NULL)
       }
@@ -794,11 +785,11 @@ DataReader <- function(client, dataset, selection){
       return (reader$CreateResultObjectByType(result, type))
   }
 
-  reader$GetObjectForFlatDataset <- function (type, result){
+  reader$GetObjectForFlatDataset <- function (type, result) {
     pivot.request <- reader$CreatePivotRequest()
     pivot.request.json <- pivot.request$SaveToJson()
     data <- reader$client$GetData(pivot.request.json)
-    if (length(data$data) == 0){
+    if (length(data$data) == 0) {
       warning(simpleError("Dataset do not have data by this selection"))
       return (NULL)
     }
@@ -807,16 +798,16 @@ DataReader <- function(client, dataset, selection){
   }
 
 
-  reader$GetObjectByType <- function(type){
-    for (dim in reader$dataset$dimensions){
+  reader$GetObjectByType <- function(type) {
+    for (dim in reader$dataset$dimensions) {
       reader$dimensions <- c(reader$dimensions, Dimension(reader$client$GetDimension(reader$dataset$id, dim$id)))
     }
     # initial values
     result <- switch (type,
-              "MetaDataTable"= {
+              "MetaDataTable" = {
                 list (list(), list())
               },
-              "DataTable"={
+              "DataTable" = {
                 list (list(), NULL, list())
               },
               "DataFrame" = {
@@ -825,10 +816,10 @@ DataReader <- function(client, dataset, selection){
               list()
               )
 
-    if (length(reader$selection)==1 & !is.null(reader$selection$mnemonics))    {
+    if (length(reader$selection)==1 & !is.null(reader$selection$mnemonics)) {
       return (reader$GetObjectForSearchingByMnemonics(type, result))
     }
-    if (reader$dataset$type == "Regular")    {
+    if (reader$dataset$type == "Regular") {
       return (reader$GetObjectForRegularDataset(type, result))
     }
     return (reader$GetObjectForFlatDataset(type, result))
