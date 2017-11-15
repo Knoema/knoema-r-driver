@@ -23,7 +23,7 @@
 #' @importFrom httr http_error
 #' @importFrom httr http_status
 
-ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
+ApiClient <- function(host = "knoema.com", client.id = "", client.secret = "") {
   client = list(
     host = host,
     client.id = client.id,
@@ -31,11 +31,11 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
   )
   #Add a few more methods
 
-  client$GetUrl <- function(apipath){
+  client$GetUrl <- function(apipath) {
     return (sprintf("http://%1s/%2s", client$host, apipath))
   }
 
-  client$GetAuthorization <- function(){
+  client$GetAuthorization <- function() {
     if (client$client.id != "" && client$client.secret != "") {
       key <- format(Sys.time(), "%d-%m-%y-%H", tz = "UCT")
       hash <-  hmac(key, client$client.secret, "sha1", raw = TRUE)
@@ -46,7 +46,7 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
     return (NULL)
   }
 
-  client$CheckCorrectHost <- function(){
+  client$CheckCorrectHost <- function() {
     if (client$host == 'knoema.com')
       return (NULL)
     url = client$GetUrl('api/1.0/frontend/tags')
@@ -56,13 +56,13 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
     return (out)
   }
 
-  client$ApiGet <- function(apipath, query = NULL){
+  client$ApiGet <- function(apipath, query = NULL) {
     url <- client$GetUrl(apipath)
     if (!is.null(query)) {
       url <- sprintf("%1s?%2s", url, query)
     }
     auth <- client$GetAuthorization()
-    if (is.null(auth)){
+    if (is.null(auth)) {
       response <- GET(url, add_headers("Content-Type"="application/json"))
     } else {
       response <- GET(url, add_headers("Content-Type"="application/json", "Authorization"= auth))
@@ -75,21 +75,20 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
     return (res)
   }
 
-  client$ApiPost <- function(apipath, request){
+  client$ApiPost <- function(apipath, request) {
     url <- client$GetUrl(apipath)
     auth <- client$GetAuthorization()
-    if (is.null(auth)){
+    if (is.null(auth)) {
       p <- POST(url, content_type("application/json"), body = request, encode = "json")
     } else {
       p <- POST(url, content_type("application/json"), add_headers("Authorization"= auth), body = request, encode = "json")
     }
-    if (http_error(p))
-    {
+    if (http_error(p)) {
       e <- simpleError(http_status(p)$message)
       stop(e)
     }
     res <- content(p, as = "parsed")
-      if (is.character(res)){
+    if (is.character(res)) {
       e <- simpleError(res)
       stop(e)
     }
@@ -97,31 +96,30 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
   }
 
   #The method is getting information about dataset by its id
-  client$GetDataset <- function(dataset.id){
+  client$GetDataset <- function(dataset.id) {
     path <- "api/1.0/meta/dataset/%1s"
     return (client$ApiGet(sprintf(path, dataset.id)))
   }
 
   #The method is getting information about dimension with items
-  client$GetDimension <- function(dataset.id, dimension.name){
+  client$GetDimension <- function(dataset.id, dimension.name) {
     path <- "api/1.0/meta/dataset/%1s/dimension/%2s"
     return (client$ApiGet(sprintf(path, dataset.id, dimension.name)))
   }
 
   #The method is getting data by pivot request
-  client$GetData <- function (pivot.request){
+  client$GetData <- function(pivot.request) {
     path <- "api/1.0/data/pivot"
     return (client$ApiPost(path, pivot.request))
   }
 
   #The method is getting data by streaming request
-  client$GetRawData <- function (pivot.request){
+  client$GetRawData <- function(pivot.request) {
     path <- "api/1.0/data/raw"
     raw.data <- client$ApiPost(path, pivot.request)
     raw.series <- raw.data$data
     token <- raw.data$continuationToken
-    while (!is.null(token))
-    {
+    while (!is.null(token)) {
       raw.data.with.token <- client$GetRawDataWithToken(token)
       raw.series <- c(raw.series, raw.data.with.token$data)
       token <- raw.data.with.token$continuationToken
@@ -129,12 +127,12 @@ ApiClient <- function(host="knoema.com", client.id = "", client.secret = "") {
     return (raw.series)
   }
 
-  client$GetRawDataWithToken <- function(token){
+  client$GetRawDataWithToken <- function(token) {
     path = "api/1.0/data/raw/?continuationToken=%1s"
     return (client$ApiGet(sprintf(path,token)))
   }
 
-  client$GetMnemonics <- function(mnemonics){
+  client$GetMnemonics <- function(mnemonics) {
     path <- "api/1.0/data/mnemonics?mnemonics=%1s"
     return (client$ApiGet(sprintf(path, mnemonics)))
   }

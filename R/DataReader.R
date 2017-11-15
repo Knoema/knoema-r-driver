@@ -262,19 +262,6 @@ DataReader <- function(client, dataset, selection) {
     return (series)
   }
 
-  reader$GetSeries <- function (resp, type) {
-    if (length(resp$data) == 0) {
-      warning(simpleError("Dataset do not have data by this selection"))
-      return (series)
-    } else {
-      series <- reader$CreateSeriesForTS(resp, list())
-      return (switch(type,
-             "zoo" = reader$CreateZoo(series),
-             "xts" = reader$CreateXts(series),
-             "ts" = reader$CreateTs(series)))
-    }
-  }
-
   reader$CreateMatrixForFrameOrTable <- function(data.rows, series) {
     list.for.matrix <- sapply(1:length(series), function (i) {
       dates <- names(series[[i]])
@@ -638,7 +625,7 @@ DataReader <- function(client, dataset, selection) {
     return (list(series, data.rows))
   }
 
-  reader$CreateDataFrame<- function(resp) {
+  reader$CreateDataFrame <- function(resp) {
     result  <- reader$CreateSeriesForDataFrame(resp, list(), NULL)
     series <- result[[1]]
     data.rows <- sort(result[[2]])
@@ -816,7 +803,7 @@ DataReader <- function(client, dataset, selection) {
               list()
               )
 
-    if (length(reader$selection)==1 & !is.null(reader$selection$mnemonics)) {
+    if (length(reader$selection) == 1 & !is.null(reader$selection$mnemonics)) {
       return (reader$GetObjectForSearchingByMnemonics(type, result))
     }
     if (reader$dataset$type == "Regular") {
