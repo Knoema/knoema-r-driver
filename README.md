@@ -70,6 +70,18 @@ In order to get access to private datasets please use parameters client.id and c
 
     data = Knoema("MEI_BTS_COS_2015", list(location = "AT;AU", subject = "BSCI", measure = "blsa", frequency = "Q;M"), type = "DataFrame", client.id = "some client id", client.secret = "some client secret")
 
+#Searching by mnemonics
+
+The search by mnemonics is implemented in knoema. Mnemonics is a unique identifier of the series. Different datasets can have the same series with the same mnemonics. In this case, in the search results there will be a series that was updated last. The same series can have several mnemonics at once, and you can search for any of them. 
+An example of using the search for mnemonics::
+
+    data = Knoema('dataset_id', mnemonics = 'mnemonic1;mnemonic2')
+
+If you are downloading data by mnemonics without providing dataset id, you can use this example::
+
+    data = Knoema(mnemonics = 'mnemonic1;mnemonic2')
+
+
 # Possible errors in Knoema package and how to avoid them
 1.  Error: "Client error: (403) Forbidden"
 This error appears in the following cases:
@@ -87,11 +99,18 @@ Examples:
     Knoema(NULL)
     Knoema(123)
 
-3. argument "selection" is missing, with no default
-This error appears when you set dataset.id, but did not set selection.
+3. Error: "Dimensions members or mnemonics are not specified"
+This error appears when you set dataset.id, but did not set selection or mnemonics.
 Example:
 
     Knoema('IMFWEO2017Apr')
+    
+4 Error: "The function does not support specifying mnemonics and selection in a single call"
+This error appears when you use mnemonics and selection in one query.
+Example::
+
+    Knoema('IMFWEO2017Apr', selection = list(country ='912', subject='lp'), mnemonics = 'some_mnemonic')
+    Knoema(selection = list(country = 'USA'), mnemonics = 'some_mnemonic')    
 
 4. Error: "Dimension with id or name *some_name_of_dimension* is not found"
 This error appears when you use name that doesn't correspond to any existing dimensions' names or ids.

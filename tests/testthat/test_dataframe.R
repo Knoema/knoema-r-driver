@@ -7,7 +7,7 @@ test_that("get data frame",{
 
 context ("get data frame with multi selection")
 test_that("get data frame with multi selection",{
-  data_frame = Knoema('IMFWEO2017Apr', list('frequency' = 'A', 'Country' = '914;612;512', 'Subject' = 'LP;NID_NGDP'),'DataFrame',client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('IMFWEO2017Apr', list('frequency' = 'A', 'Country' = '914;612;512', 'Subject' = 'LP;NID_NGDP'),type = 'DataFrame',client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   sname = "Albania - Investment (Percent of GDP) - A"
   expect_equal(data_frame[['2012-01-01',sname]], 29.824)
   sname ="Afghanistan - Investment (Percent of GDP) - A"
@@ -24,7 +24,7 @@ test_that("get metadata frame",{
 
 context ("get metadata frame with multi selection")
 test_that("get metadata frame with multi selection",{
-  data_frame = Knoema('IMFWEO2017Apr', list('frequency' = 'A', 'Country' = '914;612;512', 'Subject' = 'LP;NID_NGDP'),'MetaDataFrame',client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('IMFWEO2017Apr', list('frequency' = 'A', 'Country' = '914;612;512', 'Subject' = 'LP;NID_NGDP'),type = 'MetaDataFrame',client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   sname = "Algeria - Population (Persons) - A"
   expect_equal(data_frame[['Unit',sname]], "Persons (Millions)")
   sname ="Afghanistan - Investment (Percent of GDP) - A"
@@ -34,7 +34,7 @@ test_that("get metadata frame with multi selection",{
 
 context ("get series from dataset by partial selection dataframe")
 test_that("get series from dataset by partial selection",{
-  data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),"DataFrame", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),type = "DataFrame", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
   sname = "Japan - Six-month London interbank offered rate (LIBOR) (Percent) - A"
   expect_equal(data_frame[['2012-01-01',sname]], 0.325)
@@ -44,7 +44,7 @@ test_that("get series from dataset by partial selection",{
 
 context ("get series from dataset by partial selection Metadataframe")
 test_that("get series from dataset by partial selection",{
-  data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),"MetaDataFrame", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'), type = "MetaDataFrame", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
   sname = "Japan - Six-month London interbank offered rate (LIBOR) (Percent) - A"
   expect_equal(data_frame[['Unit',sname]], "Percent")

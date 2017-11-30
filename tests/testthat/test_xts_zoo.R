@@ -57,7 +57,7 @@ test_that("get data multi series by member id range zoo",{
 
 context("get data single series different frequencies by member id xts")
 test_that("get data single series different frequencies by member id xts",{
-  data_frame = Knoema("MEI_BTS_COS_2015", list(location = "AT", subject = "BSCI", measure = "blsa"), type="xts", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("MEI_BTS_COS_2015", list(location = "AT", subject = "BSCI", measure = "blsa"), type = "xts", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
   sname = "M - Austria - Confidence indicators - Balance; Seasonally adjusted"
@@ -131,7 +131,7 @@ test_that("get data from dataset with multiword dimnames xts",{
                                                 "Type of entity"= "ALL",
                                                 "Accounting entry"= "NET",
                                                 "Level of counterpart"= "IMC",
-                                                "Currency"= "USD"),"xts",client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+                                                "Currency"= "USD"), type = "xts", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
 
   expect_equal(length(data_frame),1)
 
@@ -147,7 +147,7 @@ test_that("get data from dataset with multiword dimnames xts",{
 context("get data multi series by member key zoo")
 test_that("get data multi series by member key zoo",{
 
-  data_frame = Knoema("IMFWEO2017Apr", list(country = "1000010;1000000;1001830", subject = "1000370;1000040"), "zoo", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Apr", list(country = "1000010;1000000;1001830", subject = "1000370;1000040"), type = "zoo", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
   sname = "A - United States - Gross domestic product, current prices (National currency)"
@@ -169,7 +169,7 @@ test_that("get data from dataset by dim ids xts",{
                                                 "Type-of-entity"= "ALL",
                                                 "Accounting-entry"= "NET",
                                                 "Level-of-counterpart"= "IMC",
-                                                "Currency"= "USD"), "xts", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
+                                                "Currency"= "USD"), type = "xts", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),1)
 
   sname = "A - Australia - WORLD - Directional principle: Inward - FDI financial flows - Total - All resident units - Net - Immediate counterpart (Immediate investor or immediate host) - US Dollar"
@@ -184,7 +184,7 @@ test_that("get data from dataset by dim ids xts",{
 
 context ("get series from dataset by partial selection xts")
 test_that("get series from dataset by partial selection xts",{
-  data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),"xts", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'), type = "xts", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
   sname = "A - Japan - Six-month London interbank offered rate (LIBOR) (Percent)"
@@ -200,7 +200,7 @@ test_that("get series from dataset by partial selection xts",{
 
 context ("get series from dataset by partial selection zoo")
 test_that("get series from dataset by partial selection zoo",{
-  data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),"zoo", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),type = "zoo", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
   sname = "A - Japan - Six-month London interbank offered rate (LIBOR) (Percent)"

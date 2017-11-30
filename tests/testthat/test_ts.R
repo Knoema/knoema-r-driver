@@ -130,7 +130,7 @@ test_that("get data from dataset with multiword dimnames ts",{
                                                 "Type of entity"= "ALL",
                                                 "Accounting entry"= "NET",
                                                 "Level of counterpart"= "IMC",
-                                                "Currency"= "USD"),"ts",client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+                                                "Currency"= "USD"), type = "ts", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
 
   expect_equal(length(data_frame),1)
 
