@@ -341,7 +341,7 @@ DataReader <- function(client) {
 
   reader$CreateResultObjectByType <- function (result, type) {
      switch (type,
-      "DataFrame"= {
+      "DataFrame" = {
        series = result[[1]]
        data.rows <- sort(result[[2]])
        data.table <- reader$GetDataFrameByData(data.rows, series)
@@ -359,20 +359,20 @@ DataReader <- function(client) {
         data.table <- reader$GetFTableByData(data.rows, data.columns, series)
         return (data.table)
       },
-      "MetaDataTable"= {
+      "MetaDataTable" = {
         series = result[[1]]
         data.rows <- reader$CreateAttributesNamesForMetadata()
         data.columns <- result[[2]]
         data.table <- reader$GetFTableByData(data.rows, data.columns, series, FALSE)
         return (data.table)
       },
-      "zoo"= {
+      "zoo" = {
         return (reader$CreateZoo(result))
       },
-      "xts"= {
+      "xts" = {
         return (reader$CreateXts(result))
       },
-      "ts"= {
+      "ts" = {
         return (reader$CreateTs(result))
       }
     )
@@ -396,16 +396,16 @@ DataReader <- function(client) {
               data.rows <- result[[2]]
               return(reader$CreateSeriesForDataFrame(data, series, data.rows))
             },
-            "MetaDataFrame"= {
+            "MetaDataFrame" = {
               return(reader$CreateSeriesForMetaDataFrame(data, result))
             },
-            "ts"= {
+            "ts" = {
               return(reader$CreateSeriesForTsXtsZoo(data, result))
             },
-            "xts"= {
+            "xts" = {
               return(reader$CreateSeriesForTsXtsZoo(data, result))
             },
-            "zoo"= {
+            "zoo" = {
               return(reader$CreateSeriesForTsXtsZoo(data, result))
             },
             {
@@ -416,11 +416,12 @@ DataReader <- function(client) {
   }
 
   reader$LoadDimensions <- function () {
+    l <- list ()
     for (dim in reader$get("dataset")$dimensions) {
       d <- Dimension(reader$client$GetDimension(reader$get("dataset")$id, dim$id))
-      l <- c(reader$get("dimensions"), d)
-      reader$set("dimensions", l)
+      l <- c(l, d)
     }
+    reader$set("dimensions", l)
   }
 
   reader <- list2env(reader)
@@ -937,7 +938,7 @@ MnemonicsDataReader<- function(client, mnemonics) {
     return (data.frame)
   }
 
-  reader$CreateSeriesForMetaDataTable <- function(resp, series, data.columns, mnemonic) {
+  reader$CreateSeriesForMetaDataTable <- function(resp, series, data.columns, data.rows, mnemonic) {
     for (serie.point in resp$data) {
       name.meta <- list()
       frequency <- serie.point$Frequency
@@ -951,7 +952,7 @@ MnemonicsDataReader<- function(client, mnemonics) {
         series[[name]] <- name.meta
       }
     }
-    return (list(series, data.columns))
+    return (list(series, data.rows, data.columns))
   }
 
   reader$CreateSeriesForMetaDataFrame <- function (resp, series, mnemonic) {
@@ -1012,6 +1013,30 @@ MnemonicsDataReader<- function(client, mnemonics) {
     return (list(series, data.rows))
   }
 
+  reader$CreateAttributesNamesForMetadata <- function(data.rows) {
+    for (dim in reader$dimensions) {
+      for (attr in dim$fields) {
+        if (!attr$isSystemField) {
+          value <- paste(dim$dim.model$name, attr$displayName, sep = " ")
+          if (!value %in% data.rows) {
+          data.rows <- c(data.rows, value)
+          }
+        }
+      }
+    }
+    if (!"Unit" %in% data.rows) {
+      data.rows <- c(data.rows, c("Unit", "Scale", "Mnemonics"))
+    }
+    for (attr in reader$dataset$time.series.attributes) {
+      if (!attr$name %in% data.rows) {
+      data.rows <- c(data.rows, attr$name)
+      }
+    }
+
+
+    return(data.rows)
+  }
+
   reader$CreateResultObjectByType <- function (result, type) {
     switch (type,
             "DataFrame" = {
@@ -1021,8 +1046,9 @@ MnemonicsDataReader<- function(client, mnemonics) {
               return (data.table)
             },
             "MetaDataFrame" = {
-              data.rows <- reader$CreateAttributesNamesForMetadata()
-              data.table <- reader$GetDataFrameByData(data.rows, result)
+              series <- result[[1]]
+              data.rows <- sort(result[[2]])
+              data.table <- reader$GetDataFrameByData(data.rows, series)
               return (data.table)
             },
             "DataTable" = {
@@ -1034,8 +1060,8 @@ MnemonicsDataReader<- function(client, mnemonics) {
             },
             "MetaDataTable" = {
               series <- result[[1]]
-              data.rows <- reader$CreateAttributesNamesForMetadata()
-              data.columns <- result[[2]]
+              data.rows <- sort(result[[2]])
+              data.columns <- result[[3]]
               data.table <- reader$GetFTableByData(data.rows, data.columns, series, FALSE)
               return (data.table)
             },
@@ -1061,8 +1087,9 @@ MnemonicsDataReader<- function(client, mnemonics) {
             },
             "MetaDataTable" = {
               series <- result [[1]]
-              data.columns <- result[[2]]
-              return(reader$CreateSeriesForMetaDataTable(data, series, data.columns, mnemonic))
+              data.columns <- result[[3]]
+              data.rows <- result[[2]]
+              return(reader$CreateSeriesForMetaDataTable(data, series, data.columns, data.rows, mnemonic))
             },
             "DataFrame" = {
               series <- result[[1]]
@@ -1070,7 +1097,8 @@ MnemonicsDataReader<- function(client, mnemonics) {
               return(reader$CreateSeriesForDataFrame(data, series, data.rows, mnemonic))
             },
             "MetaDataFrame" = {
-              return(reader$CreateSeriesForMetaDataFrame(data, result, mnemonic))
+              res <- reader$CreateSeriesForMetaDataFrame(data, result[[1]], mnemonic)
+              return (list(res, result[[2]]))
             },
             "ts" = {
               return(reader$CreateSeriesForTsXtsZoo(data, result, mnemonic))
@@ -1097,6 +1125,9 @@ MnemonicsDataReader<- function(client, mnemonics) {
     for (item in mnemonics.resp) {
       data <- item$pivot
       mnemonic <- item$mnemonics
+      if (type == "MetaDataFrame" || type == "MetaDataTable") {
+        result[[2]] <- reader$CreateAttributesNamesForMetadata (result[[2]])
+      }
       result <- reader$CreateResultSeries(data, result, type, mnemonic)
     }
     return (reader$CreateResultObjectByType(result, type))
@@ -1121,6 +1152,7 @@ MnemonicsDataReader<- function(client, mnemonics) {
           datasets.list[[dataset.id]] <- dataset
           reader$LoadDimensions()
           dimensions.list[[dataset.id]] <- reader$get("dimensions")
+          result[[2]] <- reader$CreateAttributesNamesForMetadata (result[[2]])
         } else {
           reader$set("dataset", datasets.list[[dataset.id]])
           reader$set("dimensions", dimensions.list[[dataset.id]])
@@ -1135,7 +1167,10 @@ MnemonicsDataReader<- function(client, mnemonics) {
     # initial values
     result <- switch (type,
                       "MetaDataTable" = {
-                        list (list(), list())
+                        list (list(), NULL, list())
+                      },
+                      "MetaDataFrame" = {
+                        list (list(), NULL)
                       },
                       "DataTable" = {
                         list (list(), NULL, list())
