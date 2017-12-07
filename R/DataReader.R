@@ -1124,6 +1124,9 @@ MnemonicsDataReader<- function(client, mnemonics) {
     }
     for (item in mnemonics.resp) {
       data <- item$pivot
+      if (!IsEqualStringsIgnoreCase(reader$get("dataset")$id, data$dataset)) {
+        next
+      }
       mnemonic <- item$mnemonics
       if (type == "MetaDataFrame" || type == "MetaDataTable") {
         result[[2]] <- reader$CreateAttributesNamesForMetadata (result[[2]])
