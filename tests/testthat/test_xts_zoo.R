@@ -1,7 +1,7 @@
 
 context("get data single series by member id xts")
 test_that("get data single series by member id xts",{
-  data_frame = Knoema("IMFWEO2017Apr", list(country="914", subject="lp"), type = "xts", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Oct", list(country="914", subject="lp"), type = "xts", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),1)
 
   sname = "A - Albania - Population (Persons)"
@@ -14,7 +14,7 @@ test_that("get data single series by member id xts",{
 
 context("get data multi series by member id zoo")
 test_that("get data multi series by member id zoo",{
-  data_frame = Knoema("IMFWEO2017Apr", list(country="914;512;111", subject="lp;ngdp"), type= "zoo", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Oct", list(country="914;512;111", subject="lp;ngdp"), type= "zoo", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
   sname = "A - United States - Gross domestic product, current prices (National currency)"
@@ -23,13 +23,14 @@ test_that("get data multi series by member id zoo",{
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.ts(time_ser),FALSE)
   expect_equal(coredata(time_ser)[1], 2862.475)
-  expect_equal(coredata(time_ser)[length(time_ser)], 23760.331)
+  value = coredata(time_ser[as.yearqtr(as.Date("2017-01-01"))])[1]
+  expect_equal(value, 19362.129)
 })
 
 context("get data multi series by member name xts")
 test_that("get data multi series by member name xts",{
   subj_names = "Gross domestic product, current prices (National currency);population (persons)"
-  data_frame = Knoema("IMFWEO2017Apr", list(country = "albania;afghanistan;united states", subject=subj_names), type = "xts", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Oct", list(country = "albania;afghanistan;united states", subject=subj_names), type = "xts", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
   sname = "A - United States - Gross domestic product, current prices (National currency)"
@@ -38,12 +39,13 @@ test_that("get data multi series by member name xts",{
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.ts(time_ser),FALSE)
   expect_equal(coredata(time_ser)[1], 2862.475)
-  expect_equal(coredata(time_ser)[length(time_ser)], 23760.331)
+  value = coredata(time_ser[as.yearqtr(as.Date("2022-01-01"))])[1]
+  expect_equal(value, 23505.309)
 })
 
 context("get data multi series by member id range zoo")
 test_that("get data multi series by member id range zoo",{
-  data_frame = Knoema("IMFWEO2017Apr", list(country = "914;512;111", subject = "lp;ngdp", timerange = "2015-2020"), type = "zoo", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Oct", list(country = "914;512;111", subject = "lp;ngdp", timerange = "2015-2020"), type = "zoo", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
   sname = "A - United States - Gross domestic product, current prices (National currency)"
@@ -51,140 +53,169 @@ test_that("get data multi series by member id range zoo",{
   expect_equal(is.xts(time_ser),FALSE)
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.ts(time_ser),FALSE)
-  expect_equal(coredata(time_ser)[1], 18036.650)
-  expect_equal(coredata(time_ser)[length(time_ser)], 22063.044)
+  expect_equal(coredata(time_ser)[1], 18120.70)
+  value = coredata(time_ser[as.yearqtr(as.Date("2020-01-01"))])[1]
+  expect_equal(value, 21846.33, tolerance = 0.01)
 })
 
 context("get data single series different frequencies by member id xts")
 test_that("get data single series different frequencies by member id xts",{
-  data_frame = Knoema("MEI_BTS_COS_2015", list(location = "AT", subject = "BSCI", measure = "blsa"), type = "xts", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
-  expect_equal(length(data_frame),2)
+  data_frame = Knoema('eqohmpb', list(country='512', Indicator='NGDP'), type = "xts", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  expect_equal(length(data_frame),6)
 
-  sname = "M - Austria - Confidence indicators - Balance; Seasonally adjusted"
+  sname = "M - Afghanistan - Gross domestic product, current prices"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.ts(time_ser),FALSE)
-  expect_equal(coredata(time_ser)[1], -5.0)
-  value = coredata(time_ser["2017-06-01"])[1]
-  expect_equal(value, 5.1)
+  expect_equal(coredata(time_ser)[1], 26.02858, tolerance = 0.0001)
+  value = coredata(time_ser["2003-02-01"])[1]
+  expect_equal(value, 80.71440, tolerance = 0.0001)
 
-  sname = "Q - Austria - Confidence indicators - Balance; Seasonally adjusted"
+  sname = "Q - Afghanistan - Gross domestic product, current prices"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.ts(time_ser),FALSE)
-  expect_equal(coredata(time_ser)[1], -5.233333)
-
-  value = coredata(time_ser["2017-01-01"])[1]
-  expect_equal(value, 1.566667)
+  expect_equal(coredata(time_ser)[1], 4)
+  value = coredata(time_ser["2003-04-01"])[1]
+  expect_equal(value, 5)
 })
 
 context("get data multi series single frequency by member id zoo")
 test_that("get data multi series single frequency by member id zoo",{
-  data_frame = Knoema("MEI_BTS_COS_2015", list(location = "AT;AU", subject = "BSCI", measure = "blsa", frequency = "Q"), type = "zoo", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('eqohmpb', list(country='512', Indicator='NGDP;NGDP_D', frequency='M'), type="zoo", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
-  sname = "Q - Austria - Confidence indicators - Balance; Seasonally adjusted"
+  sname = "M - Afghanistan - Gross domestic product, current prices"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),FALSE)
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.ts(time_ser),FALSE)
-  value = coredata(time_ser[as.yearqtr(as.Date("2017-01-01"))])[1]
-  expect_equal(value, 1.566667)
+  expect_equal(coredata(time_ser)[1], 26.02858, tolerance = 0.0001)
+  value = coredata(time_ser[as.yearmon(as.Date("2003-02-01"))])[1]
+  expect_equal(value, 80.71440, tolerance = 0.0001)
+
+  sname = "M - Afghanistan - Gross domestic product, deflator"
+  time_ser = data_frame[[sname]]
+  expect_equal(is.xts(time_ser),FALSE)
+  expect_equal(is.zoo(time_ser),TRUE)
+  expect_equal(is.ts(time_ser),FALSE)
+  value = coredata(time_ser[as.yearmon(as.Date("2003-01-01"))])[1]
+  expect_equal(value, 16)
 })
 
 context("get data multi series multi frequency by member id xts")
 test_that("get data multi series multi frequency by member id xts",{
-  data_frame = Knoema("MEI_BTS_COS_2015", list(location = "AT;AU", subject = "BSCI", measure = "blsa", frequency = "Q;M"), type = "xts", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
-  expect_equal(length(data_frame),3)
+  data_frame = Knoema('eqohmpb', list(country='512', Indicator='NGDP;NGDP_D', frequency='A;M'),  type = "xts", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  expect_equal(length(data_frame),4)
 
-  sname = "M - Austria - Confidence indicators - Balance; Seasonally adjusted"
+  sname = "M - Afghanistan - Gross domestic product, current prices"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.ts(time_ser),FALSE)
-  value = coredata(time_ser[as.yearmon(as.Date("2017-03-01"))])[1]
-  expect_equal(value, 2.4)
+  expect_equal(coredata(time_ser)[1], 26.02858, tolerance = 0.0001)
+  value = coredata(time_ser[as.yearmon(as.Date("2003-02-01"))])[1]
+  expect_equal(value, 80.71440, tolerance = 0.0001)
+
+  sname = "A - Afghanistan - Gross domestic product, deflator"
+  time_ser = data_frame[[sname]]
+  expect_equal(is.xts(time_ser),TRUE)
+  expect_equal(is.zoo(time_ser),TRUE)
+  expect_equal(is.ts(time_ser),FALSE)
+  value = coredata(time_ser[as.yearmon(as.Date("2003-01-01"))])[1]
+  expect_equal(value, 110.706)
+
 })
 
 context("get data multi series multi frequency by member id range zoo")
 test_that("get data multi series multi frequency by member id range zoo",{
-  data_frame = Knoema("MEI_BTS_COS_2015", list(location = "AT;BE", subject = "BSCI", measure = "blsa", frequency = "Q;M", timerange = "2010M1-2015M11"), type = "zoo", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
-  expect_equal(length(data_frame),3)
+  data_frame = Knoema('eqohmpb', list(country='512', Indicator='NGDP;NGDP_D', frequency='A;M', timerange = '2004M1-2006M12'), type = "zoo", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  expect_equal(length(data_frame),4)
 
-  sname = "M - Austria - Confidence indicators - Balance; Seasonally adjusted"
+  sname = "M - Afghanistan - Gross domestic product, current prices"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),FALSE)
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.ts(time_ser),FALSE)
-  value = coredata(time_ser[as.yearmon(as.Date("2012-12-01"))])[1]
-  expect_equal(value, -12.4)
+  value = coredata(time_ser[as.yearmon(as.Date("2004-01-01"))])[1]
+  expect_equal(value, 90.82493, tolerance = 0.0001)
+
+  sname = "A - Afghanistan - Gross domestic product, deflator"
+  time_ser = data_frame[[sname]]
+  expect_equal(is.xts(time_ser),FALSE)
+  expect_equal(is.zoo(time_ser),TRUE)
+  expect_equal(is.ts(time_ser),FALSE)
+  value = coredata(time_ser[as.yearmon(as.Date("2004-01-01"))])[1]
+  expect_equal(value, 123.063)
 })
 
 context("get data from dataset with multiword dimnames xts")
 test_that("get data from dataset with multiword dimnames xts",{
-  data_frame = Knoema("FDI_FLOW_CTRY", list("Reporting country"= "AUS",
-                                                "Partner country/territory"= "w0",
-                                                "Measurement principle"= "DI",
-                                                "Type of FDI"= "T_FA_F",
-                                                "Type of entity"= "ALL",
-                                                "Accounting entry"= "NET",
-                                                "Level of counterpart"= "IMC",
-                                                "Currency"= "USD"), type = "xts", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('eqohmpb', list("Country"='512', "Indicator"='NGDP;NGDP_D', frequency='A;M'),  type = "xts", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  expect_equal(length(data_frame),4)
 
-  expect_equal(length(data_frame),1)
-
-  sname = "A - Australia - WORLD - Directional principle: Inward - FDI financial flows - Total - All resident units - Net - Immediate counterpart (Immediate investor or immediate host) - US Dollar"
+  sname = "M - Afghanistan - Gross domestic product, current prices"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.ts(time_ser),FALSE)
-  expect_equal(coredata(time_ser)[1], 31666.667, tolerance=0.001)
-  expect_equal(coredata(time_ser)[length((time_ser))], 22267.638, tolerance=0.001)
+  expect_equal(coredata(time_ser)[1], 26.02858, tolerance = 0.0001)
+  value = coredata(time_ser[as.yearmon(as.Date("2003-02-01"))])[1]
+  expect_equal(value, 80.71440, tolerance = 0.0001)
+
+  sname = "A - Afghanistan - Gross domestic product, deflator"
+  time_ser = data_frame[[sname]]
+  expect_equal(is.xts(time_ser),TRUE)
+  expect_equal(is.zoo(time_ser),TRUE)
+  expect_equal(is.ts(time_ser),FALSE)
+  value = coredata(time_ser[as.yearmon(as.Date("2003-01-01"))])[1]
+  expect_equal(value, 110.706)
 })
 
 context("get data multi series by member key zoo")
 test_that("get data multi series by member key zoo",{
 
-  data_frame = Knoema("IMFWEO2017Apr", list(country = "1000010;1000000;1001830", subject = "1000370;1000040"), type = "zoo", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Oct", list(country = "1000010;1000000;1001830", subject = "1000370;1000040"), type = "zoo", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),6)
 
-  sname = "A - United States - Gross domestic product, current prices (National currency)"
+  sname = "A - Afghanistan - Gross domestic product, current prices (National currency)"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),FALSE)
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.ts(time_ser),FALSE)
-  expect_equal(coredata(time_ser)[1], 2862.475)
-
-  expect_equal(coredata(time_ser)[length(time_ser)], 23760.331)
+  expect_equal(coredata(time_ser)[1], 178.756)
+  value = coredata(time_ser[as.yearmon(as.Date("2012-01-01"))])[1]
+  expect_equal(value, 1033.591)
 })
 
 context("get data from dataset by dim ids xts")
 test_that("get data from dataset by dim ids xts",{
-  data_frame = Knoema("FDI_FLOW_CTRY", list("Reporting-country"= "AUS",
-                                                "Partner-country"= "w0",
-                                                "Measurement-principle"= "DI",
-                                                "Type-of-FDI"= "T_FA_F",
-                                                "Type-of-entity"= "ALL",
-                                                "Accounting-entry"= "NET",
-                                                "Level-of-counterpart"= "IMC",
-                                                "Currency"= "USD"), type = "xts", client.id = "bHcV5UkOVyKcBw", client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
-  expect_equal(length(data_frame),1)
+  data_frame = Knoema('eqohmpb', list("country"='512', "indicator"='NGDP;NGDP_D', frequency='A;M'),  type = "xts", client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  expect_equal(length(data_frame),4)
 
-  sname = "A - Australia - WORLD - Directional principle: Inward - FDI financial flows - Total - All resident units - Net - Immediate counterpart (Immediate investor or immediate host) - US Dollar"
-
+  sname = "M - Afghanistan - Gross domestic product, current prices"
   time_ser = data_frame[[sname]]
   expect_equal(is.xts(time_ser),TRUE)
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.ts(time_ser),FALSE)
-  expect_equal(coredata(time_ser)[1], 31666.667, tolerance=0.001)
-  expect_equal(coredata(time_ser)[length(time_ser)], 22267.638, tolerance=0.001)
+  expect_equal(coredata(time_ser)[1], 26.02858, tolerance = 0.0001)
+  value = coredata(time_ser[as.yearmon(as.Date("2003-02-01"))])[1]
+  expect_equal(value, 80.71440, tolerance = 0.0001)
+
+  sname = "A - Afghanistan - Gross domestic product, deflator"
+  time_ser = data_frame[[sname]]
+  expect_equal(is.xts(time_ser),TRUE)
+  expect_equal(is.zoo(time_ser),TRUE)
+  expect_equal(is.ts(time_ser),FALSE)
+  value = coredata(time_ser[as.yearmon(as.Date("2003-01-01"))])[1]
+  expect_equal(value, 110.706)
 })
 
 context ("get series from dataset by partial selection xts")
 test_that("get series from dataset by partial selection xts",{
-  data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'), type = "xts", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('IMFWEO2017Oct', list(subject = 'flibor6'), type = "xts", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
   sname = "A - Japan - Six-month London interbank offered rate (LIBOR) (Percent)"
@@ -194,13 +225,13 @@ test_that("get series from dataset by partial selection xts",{
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.xts(time_ser),TRUE)
   expect_equal(coredata(time_ser)[1], 10.861)
-  expect_equal(coredata(time_ser)[39], 0.048)
+  expect_equal(coredata(time_ser)[39], 0.178)
 })
 
 
 context ("get series from dataset by partial selection zoo")
 test_that("get series from dataset by partial selection zoo",{
-  data_frame = Knoema('IMFWEO2017Apr', list(subject = 'flibor6'),type = "zoo", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('IMFWEO2017Oct', list(subject = 'flibor6'),type = "zoo", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
   expect_equal(length(data_frame),2)
 
   sname = "A - Japan - Six-month London interbank offered rate (LIBOR) (Percent)"
@@ -210,5 +241,5 @@ test_that("get series from dataset by partial selection zoo",{
   expect_equal(is.zoo(time_ser),TRUE)
   expect_equal(is.xts(time_ser),FALSE)
   expect_equal(coredata(time_ser)[1], 10.861)
-  expect_equal(coredata(time_ser)[39], 0.048)
+  expect_equal(coredata(time_ser)[39], 0.178)
 })

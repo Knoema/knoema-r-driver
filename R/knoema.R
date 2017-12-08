@@ -13,14 +13,14 @@
 #' You can get parameters client.id and client.secret after registering on the site knoema.com, in the section "My profile - Apps - create new" (or use existing applications)
 #' @return the list of timeseries in the selected format from the dataset
 #' @examples
-#' Knoema("IMFWEO2017Apr", list(country = "512;914", subject = "NGDP_RPCH"),
+#' Knoema("IMFWEO2017Oct", list(country = "512;914", subject = "NGDP_RPCH"),
 #'            client.id = "bHcV5UkOVyKcBw",
 #'            client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
-#' Knoema("IMFWEO2017Apr", list(country = "512;914", subject = "NGDP_RPCH", frequency = "A"),
+#' Knoema("IMFWEO2017Oct", list(country = "512;914", subject = "NGDP_RPCH", frequency = "A"),
 #'            type = "xts",
 #'            client.id = "bHcV5UkOVyKcBw",
 #'            client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
-#' Knoema("IMFWEO2017Apr", list(country = "512;914", subject = "NGDP_RPCH", timerange = "2010-2015"),
+#' Knoema("IMFWEO2017Oct", list(country = "512;914", subject = "NGDP_RPCH", timerange = "2010-2015"),
 #'            client.id = "bHcV5UkOVyKcBw",
 #'            client.secret = "/0itYgLqnD0i49kmdBVSZ1qLjPU")
 #' Knoema(mnemonics="512NGDP_A_in_test_dataset",
