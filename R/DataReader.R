@@ -1146,6 +1146,9 @@ MnemonicsDataReader<- function(client, mnemonics) {
     dimensions.list <- list()
     for (item in mnemonics.resp) {
       data <- item$pivot
+      if (is.null(data)) {
+        next
+      }
       mnemonic <- item$mnemonics
       if (type == "MetaDataFrame" || type == "MetaDataTable") {
         dataset.id <- data$dataset
