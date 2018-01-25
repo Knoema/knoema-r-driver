@@ -160,6 +160,13 @@ DataReader <- function(client) {
     return (data.frame)
   }
 
+  reader$GetXtsByData <- function(data.rows, series) {
+    matrix <- reader$CreateMatrixForFrameOrTable(data.rows, series)
+    data.frame <- xts(matrix, order.by = as.Date(data.rows))
+    colnames(data.frame) <- names(series)
+    return (data.frame)
+  }
+
   reader$GetSeriesNameWithMetadata <- function(series.point) {
     names <- list()
     for (dim in reader$get("dimensions")) {
@@ -370,7 +377,10 @@ DataReader <- function(client) {
         return (reader$CreateZoo(result))
       },
       "xts" = {
-        return (reader$CreateXts(result))
+        series = result[[1]]
+        data.rows <- sort(result[[2]])
+        data.table <- reader$GetXtsByData(data.rows, series)
+        return (data.table)
       },
       "ts" = {
         return (reader$CreateTs(result))
@@ -793,7 +803,9 @@ StreamingDataReader <- function(client, selection) {
               return(reader$CreateSeriesForTsXtsZoo(data, result))
             },
             "xts" = {
-              return(reader$CreateSeriesForTsXtsZoo(data, result))
+              series <- result[[1]]
+              data.rows <- result[[2]]
+              return(reader$CreateSeriesForDataFrame(data, series, data.rows))
             },
             "zoo" = {
               return(reader$CreateSeriesForTsXtsZoo(data, result))
@@ -828,6 +840,9 @@ StreamingDataReader <- function(client, selection) {
                         list (list(), NULL, list())
                       },
                       "DataFrame" = {
+                        list (list(), NULL, list())
+                      },
+                      "xts" = {
                         list (list(), NULL, list())
                       },
                       list()
@@ -1074,7 +1089,10 @@ MnemonicsDataReader<- function(client, mnemonics) {
               return (reader$CreateZoo(result))
             },
             "xts" = {
-              return (reader$CreateXts(result))
+              series <- result[[1]]
+              data.rows <- sort(result[[2]])
+              data.table <- reader$GetXtsByData(data.rows, series)
+              return (data.table)
             },
             "ts" = {
               return (reader$CreateTs(result))
@@ -1109,7 +1127,9 @@ MnemonicsDataReader<- function(client, mnemonics) {
               return(reader$CreateSeriesForTsXtsZoo(data, result, mnemonic))
             },
             "xts" = {
-              return(reader$CreateSeriesForTsXtsZoo(data, result, mnemonic))
+              series <- result[[1]]
+              data.rows <- result[[2]]
+              return(reader$CreateSeriesForDataFrame(data, series, data.rows, mnemonic))
             },
             "zoo" = {
               return(reader$CreateSeriesForTsXtsZoo(data, result, mnemonic))
@@ -1187,6 +1207,9 @@ MnemonicsDataReader<- function(client, mnemonics) {
                         list (list(), NULL, list())
                       },
                       "DataFrame" = {
+                        list (list(), NULL, list())
+                      },
+                      "xts" = {
                         list (list(), NULL, list())
                       },
                       list()
