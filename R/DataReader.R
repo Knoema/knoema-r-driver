@@ -471,9 +471,14 @@ SelectionDataReader  <- function(client, selection) {
 
   reader$AddFullSelectionByEmptyDimValues <- function(filter.dims, request) {
     dims <- lapply(1:length(reader$dataset$dimensions), function(x) reader$dataset$dimensions[[x]]$id)
-    dims.from.filter <- lapply(1:length(filter.dims), function(x) filter.dims[[x]]$id)
-    list.condition <- sapply(dims, function(x) ! x %in% dims.from.filter)
-    out.of.filter.dim.names <- dims[list.condition]
+    if (length(filter.dims)>0) {
+      dims.from.filter <- lapply(1:length(filter.dims), function(x) filter.dims[[x]]$id)
+      list.condition <- sapply(dims, function(x) ! x %in% dims.from.filter)
+      out.of.filter.dim.names <- dims[list.condition]
+    } else {
+      out.of.filter.dim.names <- dims
+    }
+
     for (id in out.of.filter.dim.names)
     {
       l <- c(request$get("stub"), PivotItem(id, list()))

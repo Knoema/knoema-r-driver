@@ -44,10 +44,6 @@ Knoema <- function(dataset.id = NULL, selection = NULL,  mnemonics = NULL, type 
     e <- simpleError("The function does not support specifying mnemonics and selection in a single call")
     stop(e)
   }
-  if (is.character(dataset.id) && is.null(mnemonics) && is.null(selection)) {
-    e <- simpleError("Dimensions members or mnemonics are not specified")
-    stop(e)
-  }
 
   client <- ApiClient(host, client.id, client.secret)
   client$CheckCorrectHost()

@@ -63,3 +63,14 @@ test_that("get series from dataset by weekly frequency DataFame",{
   expect_equal(data_frame[['2007-04-09',sname]], 14)
 })
 
+context("get all series from dataset")
+test_that("get all series from dataset",{
+  data_frame = Knoema("eqohmpb", type = "DataFrame", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  expect_equal(length(data_frame),14)
+})
+
+context("get all series from dataset with empty list")
+test_that("get all series from dataset with empty list",{
+  data_frame = Knoema("eqohmpb", list(), type = "DataFrame", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  expect_equal(length(data_frame),14)
+})

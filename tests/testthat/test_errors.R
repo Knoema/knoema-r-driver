@@ -8,11 +8,6 @@ test_that("test dataset id is double error",{
   expect_error(Knoema(123), "dataset.id should be a string. Can't be double")
 })
 
-context("test selection is not specified error")
-test_that("test selection is not specified error",{
-  expect_error(Knoema("IMFWEO2017Oct", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU"), 'Dimensions members or mnemonics are not specified')
-})
-
 context("test selection and mnemonics in one call error")
 test_that("test selection and mnemonics in one call error",{
   expect_error(Knoema("IMFWEO2017Oct", list(country = "912", subject = "LP;NGDP"), mnemonics = "test", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU"), 'The function does not support specifying mnemonics and selection in a single call')
