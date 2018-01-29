@@ -44,11 +44,9 @@ DataReader <- function(client) {
       min.date <- min(dates)
       max.date <- max(dates)
       all.dates <- seq(min.date, max.date, by = freq.seq)
-      values <- sapply(1:length(all.dates), function(x) {
-          dat <- all.dates[x]
-          cond.v <- dat %in% dates
-          return(ifelse (cond.v, series[[i]][[as.character(dat)]], NA))
-      })
+      values <- series[[i]][as.character(all.dates)]
+      values[sapply(values,is.null)] <- NA
+      values <- unname(unlist(values))
 
       start.by.freq <- switch(freq,
                              "A" = c(year(min.date), 1),
@@ -127,12 +125,10 @@ DataReader <- function(client) {
 
   reader$CreateMatrixForFrameOrTable <- function(data.rows, series) {
     list.for.matrix <- sapply(1:length(series), function (i) {
-      dates <- names(series[[i]])
-      t <- sapply (1:length(data.rows), function (j) {
-        date <- data.rows[[j]]
-        cond <- date %in% dates
-        ifelse(cond, series[[i]][[date]], NA)
-      })
+      t <- lapply(data.rows, function(j) {
+       series[[i]][[j]]})
+      t[sapply(t,is.null)]<-NA
+      unlist(t)
     })
 
     matrix <- matrix(list.for.matrix, nrow = length(data.rows), ncol = length(series))
@@ -611,14 +607,11 @@ StreamingDataReader <- function(client, selection) {
         data.end <- data.end - days(as.numeric(strftime(data.end, "%u"))-1)
       }
       all.dates<- seq(data.begin, data.end, by = frequencies.seq[[frequency]])
-      for (i in 1:length(all.dates)) {
-        val <- all.values[[i]]
-        if (!is.null(val)) {
-          time <- format(as.Date(all.dates[[i]], "%Y-%m-%d"))
-          series[[name]][time] <- val
-        }
+      index.without.nan  <- which(!all.values %in% list(NULL))
+      dates <- format(all.dates[index.without.nan], "%Y-%m-%d")
+      serie <- setNames(all.values[index.without.nan], dates)
+      series[[name]] <- serie
       }
-    }
     return (series)
   }
 
@@ -727,16 +720,11 @@ StreamingDataReader <- function(client, selection) {
         data.end <- data.end - days(as.numeric(strftime(data.end,"%u"))-1)
       }
       all.dates<- seq(data.begin, data.end, by = frequencies.seq[[frequency]])
-      for (i in 1:length(all.dates)) {
-        val <- all.values[[i]]
-        if (!is.null(val)) {
-          time <- format(as.Date(all.dates[[i]], "%Y-%m-%d"))
-          if (!time %in% data.rows) {
-            data.rows <- c(data.rows, time)
-          }
-          series[[name]][time] <- val
-        }
-      }
+      index.without.nan  <- which(!all.values %in% list(NULL))
+      dates <- format(all.dates[index.without.nan ], "%Y-%m-%d")
+      data.rows <- unique(c(data.rows, dates))
+      serie <- setNames(all.values[index.without.nan], dates)
+      series[[name]] <- serie
     }
     return (list(series, data.rows, data.columns))
   }
@@ -764,16 +752,12 @@ StreamingDataReader <- function(client, selection) {
         data.end <- data.end - days(as.numeric(strftime(data.end, "%u"))-1)
       }
       all.dates<- seq(data.begin, data.end, by = frequencies.seq[[frequency]])
-      for (i in 1:length(all.dates)) {
-        val <- all.values[[i]]
-        if (!is.null(val)) {
-          time <- format(all.dates[[i]], "%Y-%m-%d")
-          if (!time %in% data.rows) {
-            data.rows <- c(data.rows, time)
-          }
-          series[[name]][time] <- val
-        }
-      }
+
+      index.without.nan  <- which(!all.values %in% list(NULL))
+      dates <- format(all.dates[index.without.nan ], "%Y-%m-%d")
+      data.rows <- unique(c(data.rows, dates))
+      serie <- setNames(all.values[index.without.nan], dates)
+      series[[name]] <- serie
     }
     return (list(series, data.rows))
   }
