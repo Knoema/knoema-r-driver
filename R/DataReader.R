@@ -19,6 +19,7 @@
 #' @importFrom stats ts
 #' @importFrom methods is
 #' @importFrom stats ftable
+#' @importFrom stats setNames
 
 
 DataReader <- function(client) {
