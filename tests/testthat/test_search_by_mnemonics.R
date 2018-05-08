@@ -1,6 +1,6 @@
 context("search by mnememonics - annual - MetaDataframe - one dataset")
 test_that("search by mnememonics - annual - MetaDataframe one dataset",{
-  data_frame = Knoema("eqohmpb", mnemonics="512NGDP_A_in_test_dataset", type = "MetaDataFrame", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("eqohmpb", mnemonics="512NGDP_A_in_test_dataset", type = "MetaDataFrame", client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   sname = "512NGDP_A_in_test_dataset"
   expect_equal(nrow(data_frame),5)
   expect_equal(data_frame[['Mnemonics',sname]], '512NGDP_A_in_test_dataset')
@@ -8,7 +8,7 @@ test_that("search by mnememonics - annual - MetaDataframe one dataset",{
 
 context("search by mnememonics - semiannual, daily - DataFrame one dataset")
 test_that("search by mnememonics - semiannual, daily - DataFrame one dataset",{
-  data_frame = Knoema("eqohmpb", mnemonics="512NGDP_S_in_test_dataset;512NGDP_D_in_test_dataset", type = "DataFrame", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("eqohmpb", mnemonics="512NGDP_S_in_test_dataset;512NGDP_D_in_test_dataset", type = "DataFrame", client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),2)
   sname = "512NGDP_S_in_test_dataset"
   expect_equal(data_frame[['2003-07-01',sname]], 2)
@@ -19,7 +19,7 @@ test_that("search by mnememonics - semiannual, daily - DataFrame one dataset",{
 
 context("search by mnememonics - quarterly, monthly - ts one dataset")
 test_that("search by mnememonics - quarterly, monthly - ts one dataset",{
-  data_frame = Knoema("eqohmpb", mnemonics="512NGDP_Q_in_test_dataset;512NGDP_M_in_test_dataset", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("eqohmpb", mnemonics="512NGDP_Q_in_test_dataset;512NGDP_M_in_test_dataset", client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),2)
   sname = "512NGDP_Q_in_test_dataset"
   time_ser = data_frame[[sname]]
@@ -33,7 +33,7 @@ test_that("search by mnememonics - quarterly, monthly - ts one dataset",{
 
 context("search by mnememonics - annual - MetaDataframe all datasets")
 test_that("search by mnememonics - annual - MetaDataframe all datasets",{
-  data_frame = Knoema(NULL, mnemonics="512NGDP_A_in_test_dataset", type = "MetaDataFrame", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema(NULL, mnemonics="512NGDP_A_in_test_dataset", type = "MetaDataFrame", client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   sname = "512NGDP_A_in_test_dataset"
   expect_equal(nrow(data_frame),5)
   expect_equal(data_frame[['Mnemonics',sname]], '512NGDP_A_in_test_dataset')
@@ -41,7 +41,7 @@ test_that("search by mnememonics - annual - MetaDataframe all datasets",{
 
 context("search by mnememonics - semiannual, daily - DataFrame all datasets")
 test_that("search by mnememonics - semiannual, daily - DataFrame all datasets",{
-  data_frame = Knoema(dataset = NULL, mnemonics="512NGDP_S_in_test_dataset;512NGDP_D_in_test_dataset", type = "DataFrame", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema(dataset = NULL, mnemonics="512NGDP_S_in_test_dataset;512NGDP_D_in_test_dataset", type = "DataFrame", client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),2)
   sname = "512NGDP_S_in_test_dataset"
   expect_equal(data_frame[['2003-07-01',sname]], 2)
@@ -52,7 +52,7 @@ test_that("search by mnememonics - semiannual, daily - DataFrame all datasets",{
 
 context("search by mnememonics - quarterly, monthly - ts all datasets")
 test_that("search by mnememonics - quarterly, monthly - ts all datasets",{
-  data_frame = Knoema(mnemonics="512NGDP_Q_in_test_dataset;512NGDP_M_in_test_dataset", client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema(mnemonics="512NGDP_Q_in_test_dataset;512NGDP_M_in_test_dataset", client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),2)
   sname = "512NGDP_Q_in_test_dataset"
   time_ser = data_frame[[sname]]

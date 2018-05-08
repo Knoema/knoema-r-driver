@@ -1,6 +1,6 @@
 context("get data single series by member id ts")
 test_that("get data single series by member id ts",{
-  data_frame = Knoema("IMFWEO2017Oct", list(country = "914", subject = "lp"), client.id = "bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Oct", list(country = "914", subject = "lp"), client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),1)
 
   sname = "A - Albania - Population (Persons)"
@@ -13,7 +13,7 @@ test_that("get data single series by member id ts",{
 
 context("get data multi series by member id ts")
 test_that("get data multi series by member id ts",{
-  data_frame = Knoema("IMFWEO2017Oct", list(country="914;512;111", subject="lp;ngdp"), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Oct", list(country="914;512;111", subject="lp;ngdp"), client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),6)
 
   sname = "A - United States - Gross domestic product, current prices (National currency)"
@@ -29,7 +29,7 @@ test_that("get data multi series by member id ts",{
 context("get data multi series by member name ts")
 test_that("get data multi series by member name",{
   subj_names = "Gross domestic product, current prices (National currency);population (persons)"
-  data_frame = Knoema("IMFWEO2017Oct", list(country="albania;afghanistan;united states", subject=subj_names), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Oct", list(country="albania;afghanistan;united states", subject=subj_names),client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),6)
 
   sname = "A - United States - Gross domestic product, current prices (National currency)"
@@ -44,7 +44,7 @@ test_that("get data multi series by member name",{
 
 context("get data multi series by member id range ts")
 test_that("get data multi series by member id range",{
-  data_frame = Knoema("IMFWEO2017Oct", list(country="914;512;111", subject="lp;ngdp", timerange="2015-2020"), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Oct", list(country="914;512;111", subject="lp;ngdp", timerange="2015-2020"), client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),6)
 
   sname = "A - United States - Gross domestic product, current prices (National currency)"
@@ -59,7 +59,7 @@ test_that("get data multi series by member id range",{
 
 context("get data single series different frequencies by member id ts")
 test_that("get data single series different frequencies by member id ts",{
-  data_frame = Knoema('eqohmpb', list(country='512', Indicator='NGDP'), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('eqohmpb', list(country='512', Indicator='NGDP'), client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),6)
 
   sname = "M - Afghanistan - Gross domestic product, current prices"
@@ -84,7 +84,7 @@ test_that("get data single series different frequencies by member id ts",{
 
 context("get data multi series single frequency by member id ts")
 test_that("get data multi series single frequency by member id ts",{
-  data_frame = Knoema('eqohmpb', list(country='512', Indicator='NGDP;NGDP_D', frequency='M'), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('eqohmpb', list(country='512', Indicator='NGDP;NGDP_D', frequency='M'), client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),2)
 
   sname = "M - Afghanistan - Gross domestic product, current prices"
@@ -107,7 +107,7 @@ test_that("get data multi series single frequency by member id ts",{
 
 context("get data multi series multi frequency by member id ts")
 test_that("get data multi series multi frequency by member id ts",{
-  data_frame = Knoema('eqohmpb', list(country='512', Indicator='NGDP;NGDP_D', frequency='A;M'), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('eqohmpb', list(country='512', Indicator='NGDP;NGDP_D', frequency='A;M'), client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),4)
 
   sname = "M - Afghanistan - Gross domestic product, current prices"
@@ -130,7 +130,7 @@ test_that("get data multi series multi frequency by member id ts",{
 
 context("get data multi series multi frequency by member id range ts")
 test_that("get data multi series multi frequency by member id range ts",{
-  data_frame = Knoema('eqohmpb', list(country='512', Indicator='NGDP;NGDP_D', frequency='A;M', timerange = '2004M1-2006M12'), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema('eqohmpb', list(country='512', Indicator='NGDP;NGDP_D', frequency='A;M', timerange = '2004M1-2006M12'), client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),4)
 
   sname = "M - Afghanistan - Gross domestic product, current prices"
@@ -152,7 +152,7 @@ test_that("get data multi series multi frequency by member id range ts",{
 
 context("get data from dataset with multiword dimnames ts")
 test_that("get data from dataset with multiword dimnames ts",{
-  data_frame = Knoema("eqohmpb", list("Country"= "512", "Indicator"= "NGDP"), type = "ts", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("eqohmpb", list("Country"= "512", "Indicator"= "NGDP"), type = "ts", client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),6)
 
   sname = "M - Afghanistan - Gross domestic product, current prices"
@@ -178,7 +178,7 @@ test_that("get data from dataset with multiword dimnames ts",{
 context("get data multi series by member key ts")
 test_that("get data multi series by member key ts",{
 
-  data_frame = Knoema("IMFWEO2017Oct", list(country="1000010;1000000;1001830", subject="1000370;1000040"), client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("IMFWEO2017Oct", list(country="1000010;1000000;1001830", subject="1000370;1000040"), client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),6)
 
   sname = "A - Afghanistan - Gross domestic product, current prices (National currency)"
@@ -193,7 +193,7 @@ test_that("get data multi series by member key ts",{
 
 context("get data from dataset by dim ids ts")
 test_that("get data from dataset by dim ids ts",{
-  data_frame = Knoema("eqohmpb", list("country"= "512", "Indicator"= "NGDP"), type = "ts", client.id="bHcV5UkOVyKcBw", client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+  data_frame = Knoema("eqohmpb", list("country"= "512", "Indicator"= "NGDP"), type = "ts", client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
   expect_equal(length(data_frame),6)
 
   sname = "M - Afghanistan - Gross domestic product, current prices"
@@ -218,7 +218,7 @@ test_that("get data from dataset by dim ids ts",{
 
 context ("get series from dataset by partial selection ts")
 test_that("get series from dataset by partial selection ts",{
- data_frame = Knoema('IMFWEO2017Oct', list(subject = 'flibor6'),client.id="bHcV5UkOVyKcBw",client.secret="/0itYgLqnD0i49kmdBVSZ1qLjPU")
+ data_frame = Knoema('IMFWEO2017Oct', list(subject = 'flibor6'), client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA")
  expect_equal(length(data_frame),2)
 
  sname = "A - Japan - Six-month London interbank offered rate (LIBOR) (Percent)"
