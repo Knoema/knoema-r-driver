@@ -12,20 +12,6 @@
 #' If you want to work with private datasets or from other hosts, you need to set optional parameters host, client.id and client.secret
 #' You can get parameters client.id and client.secret after registering on the site knoema.com, in the section "My profile - Apps - create new" (or use existing applications)
 #' @return the list of timeseries in the selected format from the dataset
-#' @examples
-#' Knoema("IMFWEO2017Oct", list(country = "512;914", subject = "NGDP_RPCH"),
-#'            client.id = "FzOYqDg",
-#'            client.secret="SPrvmY8eGRcGA")
-#' Knoema("IMFWEO2017Oct", list(country = "512;914", subject = "NGDP_RPCH", frequency = "A"),
-#'            type = "xts",
-#'            client.id = "FzOYqDg",
-#'            client.secret="SPrvmY8eGRcGA")
-#' Knoema("IMFWEO2017Oct", list(country = "512;914", subject = "NGDP_RPCH", timerange = "2010-2015"),
-#'            client.id = "FzOYqDg",
-#'            client.secret="SPrvmY8eGRcGA")
-#' Knoema(mnemonics="512NGDP_A_in_test_dataset",
-#'            client.id = "FzOYqDg",
-#'            client.secret="SPrvmY8eGRcGA")
 #' @export
 
 Knoema <- function(dataset.id = NULL, selection = NULL,  mnemonics = NULL, type = "ts", host = "", client.id = "", client.secret = "") {
