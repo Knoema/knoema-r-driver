@@ -30,22 +30,22 @@ There is one method for retrieving series from datasets in R: the Knoema method.
 The following quick call can be used to retrieve a timeserie from dataset:
 
     library("Knoema")
-    data = Knoema("IMFWEO2017Apr", list(country = "914", subject = "ngdp"))
+    data = Knoema("IMFWEO2018Apr", list(country = "914", subject = "ngdp"))
    
 where:
 
-* "IMFWEO2017Apr" this is a public dataset, that available for all users by reference https://knoema.com/IMFWEO2017Apr.
+* "IMFWEO2018Apr" this is a public dataset, that available for all users by reference https://knoema.com/IMFWEO2018Apr.
 * country and subject are dimensions names
 * "914" is code of country *Albania*
 * "ngdp" is code of subject *Gross domestic product, current prices (U.S. dollars)*
 
-This example finds all data points for the dataset IMFWEO2017Apr with selection by country = *Albania* and subject =  *Gross domestic product, current prices (U.S. dollars)* and stores this series in a format ts. 
+This example finds all data points for the dataset IMFWEO2018Apr with selection by country = *Albania* and subject =  *Gross domestic product, current prices (U.S. dollars)* and stores this series in a format ts. 
 
 Please note that you need to identify all dimensions of the dataset, and for each dimension to indicate the selection. Otherwise, the method returns an error.
 
 For multiple selection you can use the next example:
   
-    data = Knoema("IMFWEO2017Oct", list("country" = "914;512;111", "subject" = "lp;ngdp"))
+    data = Knoema("IMFWEO2018Apr", list("country" = "914;512;111", "subject" = "lp;ngdp"))
     
 For case when the dimensions of dataset that have multi word names use the next example:
 
@@ -60,11 +60,11 @@ For case when the dimensions of dataset that have multi word names use the next 
 
 In addition to the required using of the selections for dimensions, you can additionally specify the period and frequencies in the parameters. For more details, see the example below:
 
-    data = Knoema("IMFWEO2017Oct",list (country = "914;512;111", subject = "lp;ngdp", frequency = "A", timerange = "2007-2017"))
+    data = Knoema("IMFWEO2018Apr",list (country = "914;512;111", subject = "lp;ngdp", frequency = "A", timerange = "2007-2017"))
     
 The package supports such formats as "ts", "xts" and "zoo", "DataFrame", "DataTable", "MetaDataFrame", "MetaDataTable". By default type is equal "ts". How to use the type shown in the example below:
 
-    data = Knoema("IMFWEO2017Oct",list (country = "914;512;111", subject = "lp;ngdp"), type = "zoo") 
+    data = Knoema("IMFWEO2018Apr",list (country = "914;512;111", subject = "lp;ngdp"), type = "zoo") 
     
 In order to get access to private datasets please use parameters client.id and client.secret in a function:
 
@@ -73,57 +73,58 @@ In order to get access to private datasets please use parameters client.id and c
 # Searching by mnemonics
 
 The search by mnemonics is implemented in knoema. Mnemonics is a unique identifier of the series. Different datasets can have the same series with the same mnemonics. In this case, in the search results there will be a series that was updated last. The same series can have several mnemonics at once, and you can search for any of them. 
-An example of using the search for mnemonics::
+An example of using the search for mnemonics:
 
     data = Knoema('dataset_id', mnemonics = 'mnemonic1;mnemonic2')
 
-If you are downloading data by mnemonics without providing dataset id, you can use this example::
+If you are downloading data by mnemonics without providing dataset id, you can use this example:
 
     data = Knoema(mnemonics = 'mnemonic1;mnemonic2')
 
 
 # Possible errors in Knoema package and how to avoid them
-1.  Error: "Client error: (403) Forbidden"
-This error appears in the following cases:
+
+1. Error: "Client error: (403) Forbidden"
+This error appears in the following cases::
 1.1. when you use public user (without client.id and client.secret parameters set) and reached the limit of requests.
 1.2  when you use client.id and client.secret parameters set, and reached the limit of requests.
 1.3  when you use client.id and client.secret, but they are incorrect.
 
 You can avoid these errors, using correct parameters client.id and client.secret
 
-2.  Error: "dataset.id should be a string. Can't be NULL"
-    Error: "dataset.id should be a string. Can't be double"
+2. Error: "dataset.id should be a string. Can't be NULL"
+Error: "dataset.id should be a string. Can't be double"
 These errors appear when you use NULL or number in place of dataset's Id parameter.
 Examples:
 
-    Knoema(NULL)
-    Knoema(123)
+        Knoema(NULL)
+        Knoema(123)
 
 3.  Error: "The function does not support specifying mnemonics and selection in a single call"
 This error appears when you use mnemonics and selection in one query.
-Example::
+Example:
 
-    Knoema('IMFWEO2017Oct', selection = list(country ='912', subject='lp'), mnemonics = 'some_mnemonic')
-    Knoema(selection = list(country = 'USA'), mnemonics = 'some_mnemonic')    
+        Knoema('IMFWEO2018Apr', selection = list(country ='912', subject='lp'), mnemonics = 'some_mnemonic')
+        Knoema(selection = list(country = 'USA'), mnemonics = 'some_mnemonic')    
 
 4. Error: "Dimension with id or name *some_name_of_dimension* is not found"
 This error appears when you use name that doesn't correspond to any existing dimensions' names or ids.
 Example:
 
-    Knoema('IMFWEO2017Oct', list(dimension_not_exist='914', subject='lp')
+        Knoema('IMFWEO2018Apr', list(dimension_not_exist='914', subject='lp')
 
 5. Error: "Selection for dimension *dimension_name* is empty"
 This error appears when you use empty selection for dimension or all specified elements don't exist.
 Examples:
 
-    Knoema('IMFWEO2017Oct', list(country ='', subject='lp'))
-    Knoema('IMFWEO2017Oct', list('country'='914', 'subject'='nonexistent_element1; nonexistent_element2'))
+        Knoema('IMFWEO2018Apr', list(country ='', subject='lp'))
+        Knoema('IMFWEO2018Apr', list('country'='914', 'subject'='nonexistent_element1; nonexistent_element2'))
 
 6. Error: "The following frequencies are not correct: *list of frequencies*"
 This error appears when you use frequencies that don't correspond to supported formats.
 Example:
 
-    Knoema("IMFWEO2017Oct", list(country = "914", subject = "LP", frequency = "A;nonexistent_frequency"))
+        Knoema("IMFWEO2018Apr", list(country = "914", subject = "LP", frequency = "A;nonexistent_frequency"))
     
 We support only following abbreviations of frequencies - A, H, Q, M, W, D.
 
@@ -131,7 +132,7 @@ We support only following abbreviations of frequencies - A, H, Q, M, W, D.
 This error appears when you use dataset that doesn't exist or you don't have access rights to it.
 Example:
 
-    Knoema("IMFWEO2017Apr", list(country = "914", subject = "LP"))
+        Knoema("IMFWEO2018Apr", list(country = "914", subject = "LP"))
     
 This dataset doesn't exist. If your dataset exist, and you have access to it, check that you set client.id and client.secret parameters
 
@@ -142,6 +143,4 @@ This error appears when you use a big selection. Try to reduce the selection.
 This error can appear when you use host that doesn't exist.
 Example:
 
-     Knoema("IMFWEO2017Apr", list(country = "914", subject = "LP"), host='knoema_incorect.com')
-
-
+        Knoema("IMFWEO2018Apr", list(country = "914", subject = "LP"), host='knoema_incorect.com')
