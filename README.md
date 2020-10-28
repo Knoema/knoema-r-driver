@@ -10,6 +10,8 @@ There are two ways of installing the package:
 1. Receiving it directly from the GitHub
 2. Receiving it from CRAN
 
+It is recommended to use GitHub version as it contains most up to date version. Also if you receive the error "400 Bad Request Error" when working with the package from CRAN that means that you need to switch to GitHub package. To do this run **remove.packages("Knoema")** and then use the instruction below to install the package directly from the GitHub.
+
 # GitHub package
 To install the latest version from the GitHub use the following code:
 
