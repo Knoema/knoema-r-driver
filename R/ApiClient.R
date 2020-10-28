@@ -32,7 +32,7 @@ ApiClient <- function(host = "knoema.com", client.id = "", client.secret = "") {
   #Add a few more methods
 
   client$GetUrl <- function(apipath) {
-    return (sprintf("http://%1s/%2s", client$host, apipath))
+    return (sprintf("https://%1s/%2s", client$host, apipath))
   }
 
   client$GetAuthorization <- function() {
