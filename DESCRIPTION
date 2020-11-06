@@ -19,6 +19,6 @@ Imports: httr,
     zoo,
     methods
 Depends: R (>= 3.3.0)
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.1
 Suggests: testthat
 URL: https://github.com/Knoema/knoema-r-driver
