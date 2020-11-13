@@ -1,6 +1,6 @@
 Package: Knoema
 Title: Interface to the Knoema API
-Version: 0.1.15
+Version: 0.1.17
 Date: 2020-11-12
 Authors@R: c(person("Pavel Pimenov", role=c("aut", "cre"), email="pimenov@knoema.com"),
     person("Ekaterina Chirkova", role="aut", email="chirkova@knoema.com"),
