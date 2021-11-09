@@ -32,7 +32,7 @@ test_that("test wrong dimension selection error",{
 
 context("test incorrect dataset id error")
 test_that("test incorrect dataset id error",{
-  expect_error(Knoema("incorrect id", list(domedim = "val1;val2"), client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA"),"Requested dataset doesn't exist or you don't have access to it.")
+  expect_error(Knoema("incorrect_id", list(domedim = "val1;val2"), client.id = "FzOYqDg", client.secret="SPrvmY8eGRcGA"),"Requested dataset doesn't exist or you don't have access to it.")
   })
 
 context("test incorrect client.id and client.secret error")
